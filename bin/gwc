@@ -1,0 +1,226 @@
+#!/usr/bin/env python3
+
+
+# imports
+from importlib import import_module
+from random import uniform
+import gwcatalog as gwc
+import argparse
+import sys
+import os
+
+
+# plot subcommand
+def plot(args):
+    output = args.output
+    input = args.input
+    legend = args.legend
+    theoretical = args.theoretical
+
+    # avoid printing the image file
+    if output == sys.stdout:
+        output = None
+
+    fargs = ()
+    i = 0
+    for file in input:
+        redshifts, distances, errors = gwc.load(file)
+
+        if legend:
+            label = legend[i]
+            i += 1
+        else:
+            label = file.split("/")[-1].replace(".csv", "")
+
+        fargs += (redshifts, distances, errors, label)
+
+    gwc.plot(*fargs, theoretical=theoretical, output=output)
+
+    return
+
+
+# debug subcommand
+def debug(args):
+    output = args.output
+    distribution = args.distribution
+    error = args.error
+
+    # avoid printing the image file
+    if output == sys.stdout:
+        output = None
+
+    # if mbhb as been provided
+    if args.debug == "MBHB":
+        if distribution:
+            gwc.MBHB_dist(output=output)
+        if error:
+            gwc.MBHB_error(output=output)
+
+    # if bns as been provided
+    elif args.debug == "BNS":
+        if distribution:
+            gwc.BNS_dist(output=output)
+        if error:
+            gwc.BNS_error(output=output)
+
+    # if ligo as been provided
+    elif args.debug == "LIGO":
+        if distribution:
+            gwc.LIGO_dist(output=output)
+        if error:
+            gwc.LIGO_error(output=output)
+
+    return
+
+
+# generate subcommand
+def generate(args):
+    output = args.output
+
+    # if mbhb as been provided
+    if args.generate == "MBHB":
+        population = args.population
+        years = args.years
+        events = args.events
+
+        # check flags and generate the catalog
+        if years == 0 and events == 0:
+            raise Exception("number of years (-y, --years) or events (-e, --events) are required to generate the sample")
+        elif years != 0 and events != 0:
+            raise Exception("specify either years or events, not both")
+        elif years != 0:
+            redshifts, distances, errors = gwc.MBHB(population, years=years)
+            info = f"# event type: MBHB, observated by: LISA, data type: forecast, population: {population}, years: {years}"
+        elif events != 0:
+            redshifts, distances, errors = gwc.MBHB(population, events=events)
+            info = f"# event type: MBHB, observated by: LISA, data type: forecast, population: {population}, events: {events}"
+
+        # output the catalog
+        gwc.save(redshifts, distances, errors, output, info=info)
+
+    # if bns as been provided
+    elif args.generate == "BNS":
+        events = args.events
+
+        # check flags
+        if events == 0:
+            raise Exception("the number of events (-e, --events) is required to generate the sample")
+
+        # generate the catalog
+        redshifts, distances, errors = gwc.BNS(events=events)
+
+        # output the catalog
+        info = f"# event type: BNS, observated by: ET, data type: forecast, number of events: {events}"
+        gwc.save(redshifts, distances, errors, output, info=info)
+
+    # if gwtc as been provided
+    elif args.generate == "GWTC":
+        ideal = args.ideal
+        multiplier = args.multiplier
+
+        # generate the catalog
+        redshifts, distances, errors = gwc.GWTC(ideal=ideal, multiplier=multiplier)
+
+        # output the catalog
+        info = f"# event type: compact binary mergers, observated by: LIGO and VIRGO, data type: estimated, ideal: {ideal}" + "\n" + "# estimated means that the luminosity distance, as well as the error, of the event, is the one obtained empirically, and the redshift is estimated using a given cosmological model" + "\n"  + "# ideal is true if the events are located on top of the theoretical luminosity distance line, or false when spread around this value with a gaussian distribution"
+        gwc.save(redshifts, distances, errors, output, info=info)
+
+    # if ligo as been provided
+    elif args.generate == "LIGO":
+        events = args.events
+        ideal = args.ideal
+
+        # generate the catalog
+        redshifts, distances, errors = gwc.LIGO(events=events, ideal=ideal)
+
+        # output the catalog
+        info = f"# event type: compact binary mergers, observated by: LIGO, data type: forecast, number of events: {events}"
+        gwc.save(redshifts, distances, errors, output, info=info)
+
+    return
+
+
+# main
+def main(args):
+    # check which subcommand was provided
+    if args.subcommand == "generate":
+        generate(args)
+    elif args.subcommand == "plot":
+        plot(args)
+    elif args.subcommand == "debug":
+        debug(args)
+
+    return
+
+
+# run if called
+if __name__ == "__main__":
+    # epilog for all parsers
+    epilog = "Documentation, bug reports, suggestions and discussions at:\nhttps://github.com/jpmvferreira/gwcatalog"
+
+    # create the top level parser
+    parser = argparse.ArgumentParser(epilog=epilog)
+
+    # create global arguments in its own group
+    global_group = parser.add_argument_group("Global arguments")
+    global_group.add_argument("-o", "--output", help="Output the results to the provided file.", default=sys.stdout)
+
+    # create subparser for sub-commands
+    subcommands = parser.add_subparsers(title="Available subcommands", dest="subcommand")
+
+    # create each sub-command as a parser
+    generate_parser = subcommands.add_parser("generate", help="Generate catalogs.", epilog=epilog)
+    plot_parser = subcommands.add_parser("plot", help="Plot catalogs.", epilog=epilog)
+    debug_parser = subcommands.add_parser("debug", help="Show the underlying distributions or errors.", epilog=epilog)
+
+    # sub-command generate: add sub-parser for each catalog type, add group "keyword arguments" and arguments
+    generate_subparser = generate_parser.add_subparsers(title="Available catalog types", dest="generate")
+
+    generate_mbhb = generate_subparser.add_parser("MBHB", help="Generate a LISA forecast catalog of MBHBs.", epilog=epilog)
+    generate_mbhb_group = generate_mbhb.add_argument_group("Keyword arguments")
+    generate_mbhb_group.add_argument("-p", "--population", type=str, help="Specify the MBHB catalog population. Available populations are: No Delay, Delay and Pop III.", required=True)
+    generate_mbhb_group.add_argument("-y", "--years", type=int, help="Number of years to generate the catalog.", default=0)
+    generate_mbhb_group.add_argument("-e", "--events", type=int, help="Number of events to generate the catalog.", default=0)
+
+    generate_bns = generate_subparser.add_parser("BNS", help="Generate a ET forecast catalog of BNSs.", epilog=epilog)
+    generate_bns_group = generate_bns.add_argument_group("Keyword arguments")
+    generate_bns_group.add_argument("-e", "--events", type=int, help="Number of events in the catalog.", required=True)
+
+    generate_gwtc = generate_subparser.add_parser("GWTC", help="Generate a GWTC catalog, with estimated redshifts.", epilog=epilog)
+    generate_gwtc_group = generate_gwtc.add_argument_group("Keyword arguments")
+    generate_gwtc_group.add_argument("-i", "--ideal", action="store_true", help="Generate an ideal catalog where the events are on top of the theoretical line.")
+    generate_gwtc_group.add_argument("-m", "--multiplier", type=float, help="Multiply the error by a given constant.", default=1)
+
+    generate_ligo = generate_subparser.add_parser("LIGO", help="Generate a forecast catalog for LIGO.", epilog=epilog)
+    generate_ligo_group = generate_ligo.add_argument_group("Keyword arguments")
+    generate_ligo_group.add_argument("-e", "--events", type=int, help="Number of events in the catalog.", required=True)
+    generate_ligo_group.add_argument("-i", "--ideal", action="store_true", help="Generate an ideal catalog where the events are on top of the theoretical line.")
+
+    # sub-command plot: add group "keyword arguments" and its add arguments
+    plot_parser_group = plot_parser.add_argument_group("Keyword arguments")
+    plot_parser_group.add_argument("-i", "--input", nargs="*", help="Input .csv file(s) that contains the catalog(s) sample(s).", required=True)
+    plot_parser_group.add_argument("-l", "--legend", nargs="*", help="The label for each model given in input to show up in the corner plot legend.")
+    plot_parser_group.add_argument("-t", "--theoretical", nargs="*", help="Show the luminosity distance theoretical line. Optionally provide a label (latex supported if backslash is used to escape special characters, e.g.: \$ instead of $).")
+
+    # sub-command debug: add group "keyword arguments" and its arguments
+    debug_subparser = debug_parser.add_subparsers(title="Available catalog types", dest="debug")
+
+    debug_mbhb = debug_subparser.add_parser("MBHB", help="Debug the MBHB catalog.", epilog=epilog)
+    debug_mbhb_group = debug_mbhb.add_argument_group("Keyword arguments")
+    debug_mbhb_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying redshift distributions.")
+    debug_mbhb_group.add_argument("-e", "--error", action="store_true", help="Check the underlying error distributions.")
+
+    debug_bns = debug_subparser.add_parser("BNS", help="Debug the BNS catalog.", epilog=epilog)
+    debug_bns_group = debug_bns.add_argument_group("Keyword arguments")
+    debug_bns_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying redshift distributions.")
+    debug_bns_group.add_argument("-e", "--error", action="store_true", help="Check the underlying error distributions.")
+
+    debug_ligo = debug_subparser.add_parser("LIGO", help="Debug the LIGO catalog.", epilog=epilog)
+    debug_ligo_group = debug_ligo.add_argument_group("Keyword arguments")
+    debug_ligo_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying redshift distributions.")
+    debug_ligo_group.add_argument("-e", "--error", action="store_true", help="Check the underlying error distributions.")
+
+    # get arguments
+    args = parser.parse_args()
+
+    main(args)
