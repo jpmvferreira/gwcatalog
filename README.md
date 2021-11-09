@@ -35,13 +35,10 @@ This package requires the usage of Python version 3, as well as the following pa
 Dependencies are automatically resolved by `pip`.
 
 ### Stable version
-The stable version can be installed directly from Pypi:
-```console
-$ pip install gwcatalog
-```
+A stable version is not yet available, look below on how to install this package.
 
 ### Development version
-If you want to get the latest commits then you can install this package directly from the development branch:
+To get the latest commits then you can install this package directly from the development branch:
 ```console
 $ pip install -e git+https://github.com/jpmvferreira/gwcatalog.git@dev#egg=gwcatalog
 ```
