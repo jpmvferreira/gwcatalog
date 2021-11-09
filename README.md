@@ -13,7 +13,7 @@ A Python package and a CLI that generates catalogs of gravitational wave (GW) ev
   - [Plotting catalogs](#plotting-catalogs)
   - [Changing default cosmological model](#changing-default-cosmological-model)
   - [Saving and loading catalogs](#saving-and-loading-catalogs)
-  - [Debug](#debug)
+  - [Checking underlying distributions](#checking-underlying-distributions)
 - [References](#references)
 - [Credits](#credits)
 - [Contributing](#contributing)
@@ -35,20 +35,21 @@ This package requires the usage of Python version 3, as well as the following pa
 Dependencies are automatically resolved by `pip`.
 
 ### Stable version
-Using `pip` to install this program:
-```bash
-pip install gwcatalog
+The stable version can be installed directly from Pypi:
+```console
+$ pip install gwcatalog
 ```
 
 ### Development version
-Start by cloning the development branch locally:
-```bash
-git clone -b dev https://github.com/jpmvferreira/gwcatalog
+If you want to get the latest commits then you can install this package directly from the development branch:
+```console
+$ pip install -e git+https://github.com/jpmvferreira/gwcatalog.git@dev#egg=gwcatalog
 ```
 
-Then install using `pip` in developer mode:
-```bash
-pip install -e gwcatalog
+If instead you wish to make changes to the source code, start by cloning the development branch locally followed by an installation in editable mode:
+```console
+$ git clone -b dev https://github.com/jpmvferreira/gwcatalog
+$ pip install -e gwcatalog
 ```
 
 
@@ -137,7 +138,7 @@ After that you can get a new catalog, now generated with your custom Hubble func
 redshifts, distances, errors = gwc.MBHB("Delay", events=25)
 ```
 
-This feature is not available in the CLI.
+This feature is not yet available in the CLI.
 
 
 ### Saving and loading catalogs
@@ -153,7 +154,7 @@ Which you can easily import later with:
 redshifts, distances, errors = gwc.load("sample.csv")
 ```
 
-### Debug
+### Checking underlying distributions
 To understand what's working in the background, you can plot the redshift distribution for each MBHB population:
 
 ```python
@@ -201,7 +202,7 @@ Any discussion, suggestions or bug reports are always welcome. If you wish to co
 
 
 ## Release cycle
-All versions will have the format X.Y.Z, and the first one will be 1.0.0, which is release as soon as I think the code is good enough to be shared.
+All versions will have the format X.Y.Z, with the first one being 1.0.0, which will be released as soon as I think both the code and documentation are good enough to be shared.
 
 Each time that there is an update which does not modify the program behavior (e.g.: documentation, packaging) it will increment Z (e.g.: 1.0.0 -> 1.0.1).
 
