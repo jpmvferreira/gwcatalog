@@ -136,7 +136,7 @@ def plot_dist(output=None):
 
         plt.legend()
 
-        plt.ylabel("probability distribution function")
+        plt.ylabel("probability density function")
         plt.xlabel("redshift")
 
     # output or show
