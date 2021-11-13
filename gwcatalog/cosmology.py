@@ -19,7 +19,10 @@ def H(z):
     # option 3: providing the value for H0 directly in [s⁻¹]
     H0 = 2.2685641027252412e-18  # Hubble constant [s⁻¹]
 
-    return H0*(0.284*(1+z)**3 + 0.717)**0.5
+    # value for Ωm
+    Ωm = 0.284
+
+    return H0*(Ωm*(1+z)**3 + 1-Ωm)**0.5
 
 
 # luminosity distance
