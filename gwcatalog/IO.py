@@ -22,9 +22,9 @@ def save(redshifts, distances, errors, filename, info=""):
             file.write(info + "\n")
         file.write("\n")
         file.write("# units: none, Gpc, Gpc\n")
-        file.write("redshift,luminosity_distance,error\n")
 
     # body
+    file.write("redshift,luminosity_distance,error\n")
     for i in range(0, len(redshifts)):
         file.write(f"{redshifts[i]},{distances[i]},{errors[i]}\n")
 
