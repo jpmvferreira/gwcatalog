@@ -41,6 +41,9 @@ def dist(label):
     # get total number of events
     N = sum(dist)
 
+    # normalize distribution
+    dist = [i/N for i in dist]
+
     # get minimum and maximum of redshift distribution
     dist_min = min(dist)
     dist_max = max(dist)
@@ -127,17 +130,13 @@ def plot_dist(output=None):
 
         print(f"Sum of all events for {label} in 5 years is {N}")
 
-        plt.plot(line, events, color=color, zorder=2.5, label=label)
+        plt.plot(line, events, color="dark" + color, zorder=2.5, label=label)
         plt.grid(alpha=0.5, zorder=0.5)
+        plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-        # workaround to have fancy filling
-        events.insert(0, 0)
-        line.insert(0, z_min)
-
-        plt.fill(line, events, edgecolor="none", facecolor= "dark" + color, alpha=0.25)
         plt.legend()
 
-        plt.ylabel("events\n(5 years)")
+        plt.ylabel("probability distribution function")
         plt.xlabel("redshift")
 
     # output or show
