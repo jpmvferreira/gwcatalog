@@ -10,6 +10,8 @@ A Python package and a CLI that generates catalogs of gravitational wave (GW) ev
 - [Quick start](#quick-start)
   - [Generating a MBHB catalog](#generating-a-mbhb-catalog)
   - [Generating a BNS catalog](#generating-a-bns-catalog)
+  - [Generating a LIGO forecast catalog](#generating-a-ligo-forecast-catalog)
+  - [Getting GWTC events](#getting-gwtc-events)
   - [Plotting catalogs](#plotting-catalogs)
   - [Changing default cosmological model](#changing-default-cosmological-model)
   - [Saving and loading catalogs](#saving-and-loading-catalogs)
@@ -51,15 +53,14 @@ $ pip install -e gwcatalog
 
 
 ## Quick start
-You can use this program as a standard Python package or as a CLI, where both pack the same features.
-
-This quick start guide will show you how to use both.
+You can either use this program as a Python package or as a CLI, where both provide access to the same features. This quick start guide will also show you how to use both.
 
 ### Generating a MBHB catalog
-To generate the catalog you must specifiy: either the number of years or the number of events, and the population of black holes binaries (Pop III, Delay, No Delay). The redshift distribution is provided by the mission specification L6A2M5N2 provided in [[2]](#2), with modifications and errors found in [[1]](#1).
+The redshift distribution is provided by the mission specification L6A2M5N2 provided in [[2]](#2), with modifications and errors found in [[1]](#1).
+
+To generate the catalog you must select a population of binaries (Pop III, Delay, No Delay) and specify either the number of years or the number of events to generate the catalog.
 
 For example if you wish to generate 4 years worth of Pop III MBHB events:
-
 ```python
 redshifts, distances, errors = gwc.MBHB("Pop III", years=4)
 ```
@@ -69,8 +70,7 @@ The CLI equivalent would be:
 $ gwc generate MBHB "Pop III" --years 4
 ```
 
-If instead you would like to get 15 events of population No Delay:
-
+If instead you would like to generate 15 events of the population No Delay:
 ```python
 redshifts, distances, errors = gwc.MBHB("No Delay", events=15)
 ```
@@ -81,15 +81,57 @@ $ gwc generate MBHB "Pop III" --events 15
 ```
 
 ### Generating a BNS catalog
-The distribution used to generate the BNS events is provided by [[3]](#3). For the BNS catalog you only need to specify the number of events. In this example we will generate a catalog with 1000 events:
+The redshift and error distribution used to generate the BNS events are provided by [[3]](#3).
+
+For the BNS catalog you only need to specify the number of events. In this example we will generate a catalog with 1000 events:
 ```python
 redshifts, distances, errors = gwc.BNS(events=1000)
 ```
 
-Or the CLI equivalent:
+Being the CLI equivalent:
 ```console
 $ gwc generate BNS --events 1000
 ```
+
+### Generating a LIGO forecast catalog
+The redshift distribution of the LIGO forecats events are given in [[4]](#4), while the error is provided in [[5]](#5).
+
+Just like in the previous case, you only need to specify the number of events to generate a catalog of forecast LIGO events:
+```python
+redshifts, distances, errors = gwc.LIGO(events=50)
+```
+
+Being the CLI equivalent:
+```console
+$ gwc generate LIGO --events 50
+```
+
+There is also an added option to generate an ideal catalog, i.e. a catalog where all events lay on top of the theoretical line for the luminosity distance:
+```python
+redshifts, distances, errors = gwc.LIGO(events=50, ideal=True)
+```
+
+And in the CLI:
+```console
+$ gwc generate LIGO --events 50 --ideal
+```
+
+
+### Getting GWTC events
+The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
+
+Here we provide the data found in GWTC-1, GWTC-2 and GWTC-3, where the redshifts, luminosity distances and errors come directly from the database. The error in both redshift and luminosity distance is made symmetric, and the redshift error propagated to the luminosity distance.
+
+To obtain that data simply call the function with no arguments, as the number of events are the ones observed so far by the provided observatories:
+```python
+redshifts, distances, errors = gwc.GWTC()
+```
+
+And in the CLI:
+```console
+$ gwc generate GWTC
+```
+
 
 ### Plotting catalogs
 If you are inside a Python script, you can plot your catalog with:
@@ -183,7 +225,7 @@ With the CLI equivalent:
 $ gwc debug MBHB --error
 ```
 
-Where the same applies for the BNSs, all you have to do is replace MBHB by BNS where appropriate.
+Where the same applies for BNS and LIGO, all you have to do is replace MBHB by BNS or LIGO where appropriate. Because GWTC includes real data there is no underlying distribution.
 
 
 ## References
@@ -195,6 +237,12 @@ C. Caprini and N. Tamanini, Constraining early and interacting dark energy with 
 
 <a id="3">[3]</a>
 E. Belgacem, Y. Dirian, S. Foffa, and M. Maggiore, Modified gravitational-wave propagation and standard sirens, Physical Review D 98, [10.1103/physrevd.98.023510](https://doi.org/10.1103/physrevd.98.023510) (2018).
+
+<a id="4">[4]</a>
+M. Lagos, M. Fishbach, P. Landry, and D. E. Holz, Standard sirens with a running planck mass, Physical Review D 99, [10.1103/physrevd.99.083504](https://doi.org/10.1103/physrevd.99.083504) (2019).
+
+<a id="5">[5]</a>
+T. Baker and I. Harrison, Constraining scalar-tensor modified gravity with gravitational waves and large scale structure surveys, [Journal of Cosmology and Astroparticle Physics 2021 (01), 068–068](https://doi.org/10.1088/1475-7516/2021/01/068).
 
 
 ## Credits
