@@ -176,6 +176,9 @@ def generate(args):
 
 # main
 def main(args):
+    # auxiliary global variable to hold the description of the cosmological model being used
+    global description
+
     # import custom cosmology, if provided, using monkey patchings
     if args.cosmology:
         from gwcatalog import cosmology
@@ -185,14 +188,15 @@ def main(args):
         module = import_module("model")
         cosmology.H = module.H
         cosmology.dL = module.dL
-        global description
         try:
             description = module.description.replace("\n", "")
         except:
-            description = "ΛCDM (Ωₘ = 0.284, h = 0.7)"
+            description = "custom"
         sys.path.pop()
         os.system("rm -r /tmp/gwcatalog")
         uncache(["gwcatalog.cosmology"])
+    else:
+        description = "ΛCDM (Ωₘ = 0.284, h = 0.7)"
 
     # import gwcatalog to global namespace after monkey patching the cosmology
     global gwc
