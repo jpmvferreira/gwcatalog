@@ -139,6 +139,8 @@ $ gwc --cosmology mycosmology.py (...)
 
 This is a global flag, which means it should always be present before any of the available subcommands.
 
+Optionally you may add a variable named `description` in the previous file, that should be a string with a descriptive name of the cosmology being used. That string will be printed in the .csv file provided as output, which you will learn about in the next section. This feature is only available in the CLI.
+
 
 ### Saving and loading catalogs
 This package also includes an easy way to save your catalogs to a `.csv` file:
