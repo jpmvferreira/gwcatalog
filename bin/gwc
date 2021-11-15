@@ -4,11 +4,38 @@
 # imports
 from importlib import import_module
 from random import uniform
-import gwcatalog as gwc
 import argparse
 import sys
 import os
 
+def uncache(exclude):
+    """Remove package modules from cache except excluded ones.
+    On next import they will be reloaded.
+
+    Args:
+    exclude (iter<str>): Sequence of module paths.
+    """
+    pkgs = []
+    for mod in exclude:
+        pkg = mod.split('.', 1)[0]
+        pkgs.append(pkg)
+
+    to_uncache = []
+    for mod in sys.modules:
+        if mod in exclude:
+            continue
+
+        if mod in pkgs:
+            to_uncache.append(mod)
+            continue
+
+        for pkg in pkgs:
+            if mod.startswith(pkg + '.'):
+                to_uncache.append(mod)
+                break
+
+    for mod in to_uncache:
+        del sys.modules[mod]
 
 # plot subcommand
 def plot(args):
@@ -45,7 +72,7 @@ def debug(args):
     distribution = args.distribution
     error = args.error
 
-    # avoid printing the image file
+    # don't print image files
     if output == sys.stdout:
         output = None
 
@@ -142,6 +169,23 @@ def generate(args):
 
 # main
 def main(args):
+    # import custom cosmology
+    if args.cosmology:
+        from gwcatalog import cosmology
+        os.system("mkdir /tmp/gwcatalog")
+        os.system(f"cp {args.cosmology} /tmp/gwcatalog/model.py")
+        sys.path.append(f"/tmp/gwcatalog")
+        module = import_module("model")
+        cosmology.H = module.H
+        cosmology.dL = module.dL
+        sys.path.pop()
+        os.system("rm -r /tmp/gwcatalog")
+        uncache(["gwcatalog.cosmology"])
+
+    # import the entire package to global namespace
+    global gwc
+    import gwcatalog as gwc
+
     # check which subcommand was provided
     if args.subcommand == "generate":
         generate(args)
@@ -163,6 +207,7 @@ if __name__ == "__main__":
 
     # create global arguments in its own group
     global_group = parser.add_argument_group("Global arguments")
+    global_group.add_argument("-c", "--cosmology", help="Provide a different cosmology. Input must be a Python script with the Hubble function H(z) and the luminosity distance dL(z, H).")
     global_group.add_argument("-o", "--output", help="Output the results to the provided file.", default=sys.stdout)
 
     # create subparser for sub-commands

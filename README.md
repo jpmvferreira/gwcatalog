@@ -116,40 +116,47 @@ $ gwc plot --input catalog1.csv catalog2.csv --legend "catalog 1" "catalog 2"
 ```
 
 ### Changing default cosmological model
-If you want to generate your samples with something other that ΛCDM, which is the default when generating both the MBHB and BNS events, then you can redefine the default hubble function with:
-
+If you want to generate your samples with something other that ΛCDM, which is the default when generating both the MBHB and BNS events, then you can redefine the default hubble function using [monkey patching](https://en.wikipedia.org/wiki/Monkey_patch#Examples):
 ```python
-# your custom Hubble function here
+# your custom Hubble and luminosity distance functions here
 def H(z):
   (...)
 
-# redefine default Hubble function
+def dL(z, H):
+  (...)
+
+# monkey patch the Hubble and luminosity distance functions
 gwc.H = H
+gwc.dL = dL
 ```
 
-Where the same applies for the light distance, where you would replace `gwc.dL` instead of `gwc.H`.
+Now you can generate a catalog the same as before, however this time it will make use of your Hubble and luminosity distances functions.
 
-After that you can get a new catalog, now generated with your custom Hubble function, the same way as before:
-
-```python
-redshifts, distances, errors = gwc.MBHB("Delay", events=25)
+In the CLI simply point towards a Python script where both `H(z)` and `dL(z, H)` are defined with `-c`, `--cosmology` flag, followed by the desired subcommand (which is omitted here):
+```console
+$ gwc --cosmology mycosmology.py (...)
 ```
 
-This feature is not yet available in the CLI.
+This is a global flag, which means it should always be present before any of the available subcommands.
 
 
 ### Saving and loading catalogs
 This package also includes an easy way to save your catalogs to a `.csv` file:
-
 ```python
 gwc.save(z, dL, error, "sample.csv")
 ```
 
 Which you can easily import later with:
-
 ```python
 redshifts, distances, errors = gwc.load("sample.csv")
 ```
+
+In the CLI you can also provide the output file using the `-o`, `--output` flag, which allows you to save whatever it is that the command returns, if you want to save a MBHB catalog which you just generated:
+```console
+$ gwc --output MBHB.csv generate MBHB -p "No Delay" -e 15
+```
+
+Just the the cosmology flag, the output flag is a global flag, meaning that it should come before any subcommand.
 
 ### Checking underlying distributions
 To understand what's working in the background, you can plot the redshift distribution for each MBHB population:
