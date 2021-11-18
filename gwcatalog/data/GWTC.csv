@@ -1,5 +1,5 @@
 # The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration.
-# Taken from https://www.gw-openscience.org/eventapi/html/GWTC/ at 2021-11-09
+# Taken from https://www.gw-openscience.org/eventapi/html/GWTC/ at 09/11/2021
 # Includes data from GWTC-1, GWTC-2, GWTC-2.1 and GWTC-3
 
 id,commonName,version,catalog.shortName,GPS,reference,jsonurl,mass_1_source,mass_1_source_lower,mass_1_source_upper,mass_2_source,mass_2_source_lower,mass_2_source_upper,network_matched_filter_snr,network_matched_filter_snr_lower,network_matched_filter_snr_upper,luminosity_distance,luminosity_distance_lower,luminosity_distance_upper,chi_eff,chi_eff_lower,chi_eff_upper,total_mass_source,total_mass_source_lower,total_mass_source_upper,chirp_mass_source,chirp_mass_source_lower,chirp_mass_source_upper,chirp_mass,chirp_mass_lower,chirp_mass_upper,redshift,redshift_lower,redshift_upper,far,far_lower,far_upper,final_mass_source,final_mass_source_lower,final_mass_source_upper
