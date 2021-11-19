@@ -45,7 +45,7 @@ def uncache(exclude):
 def plot(args):
     output = args.output
     input = args.input
-    legend = args.legend
+    legend = eval(args.legend) if args.legend else None
     theoretical = args.theoretical
 
     # avoid printing the image file
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     # sub-command plot: add group "keyword arguments" and its add arguments
     plot_parser_group = plot_parser.add_argument_group("Keyword arguments")
     plot_parser_group.add_argument("-i", "--input", nargs="*", help="Input .csv file(s) that contains the catalog(s) sample(s).", required=True)
-    plot_parser_group.add_argument("-l", "--legend", nargs="*", help="The label for each model given in input to show up in the corner plot legend.")
+    plot_parser_group.add_argument("-l", "--legend", type=str, help="A string with a Python like list with the legend for each parameter, e.g.: \"['\\catalog 1', '\\catalog 2']\". Must match the order of the input files. Defaults to file name.")
     plot_parser_group.add_argument("-t", "--theoretical", nargs="*", help="Show the luminosity distance theoretical line. Optionally provide a label (latex supported if backslash is used to escape special characters, e.g.: \$ instead of $).")
 
     # sub-command debug: add group "keyword arguments" and its arguments
