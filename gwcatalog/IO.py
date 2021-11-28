@@ -19,7 +19,7 @@ def save(redshifts, distances, errors, filename, info=""):
     if file != sys.stdout:
         if info:
             file.write(info + "\n")
-        file.write("\n")
+            file.write("\n")
         file.write("# units: none, Gpc, Gpc\n")
 
     # body

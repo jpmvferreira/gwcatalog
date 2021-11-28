@@ -158,23 +158,7 @@ $ gwc plot --input catalog1.csv catalog2.csv --legend "catalog 1" "catalog 2"
 ```
 
 ### Changing default cosmological model
-If you want to generate your samples with something other that ΛCDM, which is the default when generating both the MBHB and BNS events, then you can redefine the default hubble function using [monkey patching](https://en.wikipedia.org/wiki/Monkey_patch#Examples):
-```python
-# your custom Hubble and luminosity distance functions here
-def H(z):
-  (...)
-
-def dL(z, H):
-  (...)
-
-# monkey patch the Hubble and luminosity distance functions
-gwc.H = H
-gwc.dL = dL
-```
-
-Now you can generate a catalog the same as before, however this time it will make use of your Hubble and luminosity distances functions.
-
-In the CLI simply point towards a Python script where both `H(z)` and `dL(z, H)` are defined with `-c`, `--cosmology` flag, followed by the desired subcommand (which is omitted here):
+This feature is only available in the CLI, to do so, simply point towards a Python script where both `H(z)` and `dL(z, H)` are defined with `-c`, `--cosmology` flag, followed by the desired subcommand (which is omitted here):
 ```console
 $ gwc --cosmology mycosmology.py (...)
 ```
