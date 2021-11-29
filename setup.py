@@ -4,7 +4,7 @@ with open(f"README.md") as f:
     long_description = f.read()
 
 setup(name="gwcatalog",
-      version="dev",
+      version="0.0.0",
       description="A Python package and a CLI that generates catalogs of gravitational wave (GW) events from different astrophysical sources, for different observatories.",
       long_description=long_description,
       long_description_content_type="text/markdown",
