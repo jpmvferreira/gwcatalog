@@ -1,6 +1,10 @@
 ## About
 A Python package and a CLI that generates catalogs of gravitational wave (GW) events from different astrophysical sources, for different observatories.
 
+Currently generates mock catalogs for LISA, ET and LIGO. It also gives you access to the (real) events from the GWTC catalog, where the luminosity distance is obtained directly from the gravitational wave and the redshift estimated using ΛCDM.
+
+It also provides ease of access to check the underlying redshift and error distributions.
+
 
 ## Table of contents
 - [Installation](#installation)
@@ -8,10 +12,10 @@ A Python package and a CLI that generates catalogs of gravitational wave (GW) ev
   - [Stable version](#stable-version)
   - [Development version](#development-version)
 - [Quick start](#quick-start)
-  - [Generating a MBHB catalog](#generating-a-mbhb-catalog)
-  - [Generating a BNS catalog](#generating-a-bns-catalog)
-  - [Generating a LIGO forecast catalog](#generating-a-ligo-forecast-catalog)
-  - [Getting GWTC events](#getting-gwtc-events)
+  - [LISA mock catalog](#lisa-mock-catalog)
+  - [ET mock catalog](#et-mock-catalog)
+  - [LIGO mock catalog](#ligo-mock-catalog)
+  - [GWTC](#gwtc)
   - [Plotting catalogs](#plotting-catalogs)
   - [Changing default cosmological model](#changing-default-cosmological-model)
   - [Saving and loading catalogs](#saving-and-loading-catalogs)
@@ -55,12 +59,12 @@ $ pip install -e gwcatalog
 ## Quick start
 You can either use this program as a Python package or as a CLI, where both provide access to the same features. This quick start guide will also show you how to use both.
 
-### Generating a MBHB catalog
+### LISA mock catalog
 The redshift distribution is provided by the mission specification L6A2M5N2 provided in [[2]](#2), with modifications and errors found in [[1]](#1).
 
-To generate the catalog you must select a population of binaries (Pop III, Delay, No Delay) and specify either the number of years or the number of events to generate the catalog.
+To generate the catalog you must select a population of MBHB, either Pop III, Delay or No Delay, and specify either the number of years or the number of events to generate the catalog.
 
-For example if you wish to generate 4 years worth of Pop III MBHB events:
+For example if you wish to generate 4 years worth of Pop III MBHB events measured by LISA:
 ```python
 redshifts, distances, errors = gwc.MBHB("Pop III", years=4)
 ```

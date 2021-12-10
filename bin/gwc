@@ -235,22 +235,22 @@ if __name__ == "__main__":
     # sub-command generate: add sub-parser for each catalog type, add group "keyword arguments" and arguments
     generate_subparser = generate_parser.add_subparsers(title="Available catalog types", dest="generate")
 
-    generate_mbhb = generate_subparser.add_parser("MBHB", help="Generate a LISA forecast catalog of MBHBs.", epilog=epilog)
+    generate_mbhb = generate_subparser.add_parser("LISA", help="Generate a LISA forecast catalog with MBHBs.", epilog=epilog)
     generate_mbhb_group = generate_mbhb.add_argument_group("Keyword arguments")
     generate_mbhb_group.add_argument("-p", "--population", type=str, help="Specify the MBHB catalog population. Available populations are: No Delay, Delay and Pop III.", required=True)
     generate_mbhb_group.add_argument("-y", "--years", type=int, help="Number of years to generate the catalog.", default=0)
     generate_mbhb_group.add_argument("-e", "--events", type=int, help="Number of events to generate the catalog.", default=0)
 
-    generate_bns = generate_subparser.add_parser("BNS", help="Generate a ET forecast catalog of BNSs.", epilog=epilog)
+    generate_bns = generate_subparser.add_parser("ET", help="Generate a ET forecast catalog with BNSs.", epilog=epilog)
     generate_bns_group = generate_bns.add_argument_group("Keyword arguments")
     generate_bns_group.add_argument("-e", "--events", type=int, help="Number of events in the catalog.", required=True)
 
-    generate_gwtc = generate_subparser.add_parser("GWTC", help="Generate a GWTC catalog, with estimated redshifts.", epilog=epilog)
-
-    generate_ligo = generate_subparser.add_parser("LIGO", help="Generate a forecast catalog for LIGO.", epilog=epilog)
+    generate_ligo = generate_subparser.add_parser("LIGO", help="Generate a LIGO forecast catalog with compact binaries.", epilog=epilog)
     generate_ligo_group = generate_ligo.add_argument_group("Keyword arguments")
     generate_ligo_group.add_argument("-e", "--events", type=int, help="Number of events in the catalog.", required=True)
     generate_ligo_group.add_argument("-i", "--ideal", action="store_true", help="Generate an ideal catalog where the events are on top of the theoretical line.")
+
+    generate_gwtc = generate_subparser.add_parser("GWTC", help="Generate a GWTC catalog, based on real events, with estimated redshifts using ΛCDM.", epilog=epilog)
 
     # sub-command plot: add group "keyword arguments" and its add arguments
     plot_parser_group = plot_parser.add_argument_group("Keyword arguments")
@@ -261,20 +261,20 @@ if __name__ == "__main__":
     # sub-command debug: add group "keyword arguments" and its arguments
     debug_subparser = debug_parser.add_subparsers(title="Available catalog types", dest="debug")
 
-    debug_mbhb = debug_subparser.add_parser("MBHB", help="Debug the MBHB catalog.", epilog=epilog)
+    debug_mbhb = debug_subparser.add_parser("LISA", help="Show the MBHBs redshift distributions or the LISA observation errors.", epilog=epilog)
     debug_mbhb_group = debug_mbhb.add_argument_group("Keyword arguments")
-    debug_mbhb_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying redshift distributions.")
-    debug_mbhb_group.add_argument("-e", "--error", action="store_true", help="Check the underlying error distributions.")
+    debug_mbhb_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying MBHB redshift distributions.")
+    debug_mbhb_group.add_argument("-e", "--error", action="store_true", help="Check the underlying LISA observation errors.")
 
-    debug_bns = debug_subparser.add_parser("BNS", help="Debug the BNS catalog.", epilog=epilog)
+    debug_bns = debug_subparser.add_parser("ET", help="Show the BNSs redshift distributions or the ET observation errors.", epilog=epilog)
     debug_bns_group = debug_bns.add_argument_group("Keyword arguments")
-    debug_bns_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying redshift distributions.")
-    debug_bns_group.add_argument("-e", "--error", action="store_true", help="Check the underlying error distributions.")
+    debug_bns_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying BNS redshift distributions.")
+    debug_bns_group.add_argument("-e", "--error", action="store_true", help="Check the underlying ET observation errors.")
 
-    debug_ligo = debug_subparser.add_parser("LIGO", help="Debug the LIGO catalog.", epilog=epilog)
+    debug_ligo = debug_subparser.add_parser("LIGO", help="Show the compact binaries redshift distributions or the LIGO observation errors.", epilog=epilog)
     debug_ligo_group = debug_ligo.add_argument_group("Keyword arguments")
-    debug_ligo_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying redshift distributions.")
-    debug_ligo_group.add_argument("-e", "--error", action="store_true", help="Check the underlying error distributions.")
+    debug_ligo_group.add_argument("-d", "--distribution", action="store_true", help="Check the underlying compact binaries redshift distributions.")
+    debug_ligo_group.add_argument("-e", "--error", action="store_true", help="Check the underlying LIGO observation errors.")
 
     # get arguments
     args = parser.parse_args()
