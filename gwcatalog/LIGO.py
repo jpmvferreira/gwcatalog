@@ -46,6 +46,7 @@ def zerror(z):
 
 
 # return the total error for the luminosity distance
+# assumed by arXiv:2007.13791
 def error(redshift, distance):
     # get the error for the luminosity distance
     distanceerror = dLerror(distance)
@@ -106,12 +107,12 @@ def plot_dist(output=None):
     plt.plot(distances, probabilities)
     plt.gca().axes.yaxis.set_ticklabels([])  # somehow removes ticks without removing grid
     plt.grid()
-    plt.xlabel("$d_L$ (Gpc)")
-    plt.ylabel("Probability")
+    plt.xlabel("luminosity distance (Gpc)")
+    plt.ylabel("Probability distribution function")
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
 
@@ -145,7 +146,7 @@ def plot_error(output=None):
     ax1.plot(distances, dLerrors, label="$\sigma_{d_L}(d_L)$")
     ax1.plot(distances, errors, label="$\sigma(d_L)$")
     ax1.grid()
-    ax1.set_xlabel("$d_L$ (Gpc)")
+    ax1.set_xlabel("luminosity distance (Gpc)")
     ax1.set_ylabel("error (Gpc)")
     ax1.legend()
 
@@ -153,15 +154,15 @@ def plot_error(output=None):
     zerrors = [zerror(i) for i in redshifts]
 
     # plot redshift error
-    ax2.plot(redshifts, zerrors, label="$\sigma_z(z)$")
+    ax2.plot(redshifts, zerrors, label="error")
     ax2.grid()
-    ax2.set_xlabel("z")
+    ax2.set_xlabel("redshift")
     ax2.set_ylabel("error")
     ax2.legend()
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
 

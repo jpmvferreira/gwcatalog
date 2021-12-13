@@ -141,7 +141,7 @@ def plot_dist(output=None):
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
 
@@ -184,13 +184,14 @@ def plot_error(output=None):
     # fancy up the plot
     plt.yticks([0, 0.05, 0.10, 0.15, 0.20])
     plt.xscale("log")
-    plt.xlabel("z")
+    plt.xlabel("redshift")
+    plt.ylabel("error")
     plt.legend()
     plt.grid(alpha=0.5, zorder=0.5)
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
 

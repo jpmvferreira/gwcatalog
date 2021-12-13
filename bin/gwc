@@ -81,14 +81,14 @@ def debug(args):
         output = None
 
     # if mbhb as been provided
-    if args.debug == "MBHB":
+    if args.debug == "LISA":
         if distribution:
             gwc.MBHB_dist(output=output)
         if error:
             gwc.MBHB_error(output=output)
 
     # if bns as been provided
-    elif args.debug == "BNS":
+    elif args.debug == "ET":
         if distribution:
             gwc.BNS_dist(output=output)
         if error:

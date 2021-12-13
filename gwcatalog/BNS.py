@@ -103,13 +103,13 @@ def plot_dist(output=None):
 
     # plot and show
     plt.plot(line, distribution)
-    plt.xlabel("z")
-    plt.ylabel("f(z)")
+    plt.xlabel("redshift")
+    plt.ylabel("probability distribution function")
     plt.grid()
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
 
@@ -130,13 +130,13 @@ def plot_error(output=None):
 
     # plot and show
     plt.plot(line, errors)
-    plt.xlabel("z")
-    plt.ylabel("$\sigma (z)$")
+    plt.xlabel("redshift")
+    plt.ylabel("error")
     plt.grid()
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
 
