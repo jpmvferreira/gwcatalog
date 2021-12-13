@@ -4,7 +4,6 @@
 
 
 # imports
-from scipy.optimize import minimize
 from scipy.integrate import quad
 import matplotlib.pyplot as plt
 from random import gauss
@@ -61,9 +60,7 @@ def generate(events=0):
     f = dist(dL, H, r, events, zmin, zmax)
 
     # get maximum to use in rejection method
-    x0 = (zmax-zmin)/2
-    max = minimize(lambda z: -f(z), x0=x0)
-    max = float(max["x"])
+    max = f(1)*1.05
 
     # get redshift distribution
     min = 0
