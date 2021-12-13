@@ -1,4 +1,4 @@
-## BNS.py
+## ET.py
 # all functions related to binary neutron stars (BNSs)
 # both the distributions and errors are forecasts for the Einstein Telescope (ET)
 
@@ -118,7 +118,7 @@ def plot_dist(output=None):
 
 # plot the error as a function of redshift
 def plot_error(output=None):
-    # manually set redshift boundaries defined in /BNS.py
+    # manually set redshift boundaries defined in this script
     zmin = 0.07
     zmax = 2
     line = np.linspace(zmin, zmax, 1000)

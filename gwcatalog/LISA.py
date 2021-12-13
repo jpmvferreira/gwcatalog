@@ -1,4 +1,4 @@
-## MBHB.py
+## LISA.py
 # all functions related to massive black hole binaries (MBHBs)
 # both the distributions and errors are forecasts for the Laser Interferometer Space Antenna (LISA)
 
