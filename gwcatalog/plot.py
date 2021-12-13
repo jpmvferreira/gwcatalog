@@ -43,7 +43,7 @@ def plot(*args, theoretical=False, output=None):
             label = ""
         plt.plot(line, distances, label=label, color="black", zorder=2.5, alpha=0.75)
 
-    # format and show the two previous plots
+    # format and show
     plt.xlabel("z")
     plt.ylabel("$d_L$ (Gpc)")
     plt.grid(alpha=0.5, zorder=0.5)
@@ -51,6 +51,6 @@ def plot(*args, theoretical=False, output=None):
 
     # output or show
     if output:
-        plt.savefig(output)
+        plt.savefig(output, transparent=True)
     else:
         plt.show()
