@@ -1,9 +1,9 @@
 ## About
 A Python package and a CLI that generates catalogs of gravitational wave (GW) events from different astrophysical sources, for different observatories.
 
-Currently generates mock catalogs for LISA, ET and LIGO. It also gives you access to the (real) events from the GWTC catalog, where the luminosity distance is obtained directly from the gravitational wave and the redshift estimated using ΛCDM.
+Currently generates standard siren mock catalogs for LISA, ET and LIGO. It also gives you access to the (real) events from the GWTC catalog, where the luminosity distance is obtained directly from the gravitational wave and the redshift estimated using ΛCDM by the LIGO/VIRGO/KAGRA collaboration, with symmetric errors.
 
-It also provides ease of access to check the underlying redshift and error distributions.
+It also provides ease of access to check the underlying redshift and error distributions, used to generate the mock catalogs.
 
 
 ## Table of contents
@@ -60,47 +60,47 @@ $ pip install -e gwcatalog
 You can either use this program as a Python package or as a CLI, where both provide access to the same features. This quick start guide will also show you how to use both.
 
 ### LISA mock catalog
-The redshift distribution is provided by the mission specification L6A2M5N2 provided in [[2]](#2), with modifications and errors found in [[1]](#1).
+The MBHB redshift distribution is provided by the mission specification L6A2M5N2 provided in [[2]](#2), with modifications and errors found in [[1]](#1).
 
-To generate the catalog you must select a population of MBHB, either Pop III, Delay or No Delay, and specify either the number of years or the number of events to generate the catalog.
+To generate the LISA mock catalog you must select a population of MBHB, either "Pop III", "Delay" or "No Delay", and specify either the number of years or events to generate the catalog.
 
 For example if you wish to generate 4 years worth of Pop III MBHB events measured by LISA:
 ```python
-redshifts, distances, errors = gwc.MBHB("Pop III", years=4)
+redshifts, distances, errors = gwc.LISA("Pop III", years=4)
 ```
 
 The CLI equivalent would be:
 ```console
-$ gwc generate MBHB "Pop III" --years 4
+$ gwc generate LISA "Pop III" --years 4
 ```
 
 If instead you would like to generate 15 events of the population No Delay:
 ```python
-redshifts, distances, errors = gwc.MBHB("No Delay", events=15)
+redshifts, distances, errors = gwc.LISA("No Delay", events=15)
 ```
 
 And in the CLI:
 ```console
-$ gwc generate MBHB "Pop III" --events 15
+$ gwc generate LISA "Pop III" --events 15
 ```
 
-### Generating a BNS catalog
-The redshift and error distribution used to generate the BNS events are provided by [[3]](#3).
+### ET mock catalog
+The BNS redshift and error distribution used to generate the ET mock catalog are provided in [[3]](#3).
 
-For the BNS catalog you only need to specify the number of events. In this example we will generate a catalog with 1000 events:
+In this example we will generate a mock catalog with 1000 events:
 ```python
-redshifts, distances, errors = gwc.BNS(events=1000)
+redshifts, distances, errors = gwc.ET(events=1000)
 ```
 
 Being the CLI equivalent:
 ```console
-$ gwc generate BNS --events 1000
+$ gwc generate ET --events 1000
 ```
 
-### Generating a LIGO forecast catalog
+### LIGO mock catalog
 The redshift distribution of the LIGO forecats events are given in [[4]](#4), while the error is provided in [[5]](#5).
 
-Just like in the previous case, you only need to specify the number of events to generate a catalog of forecast LIGO events:
+To generate a mock catalog for LIGO all you need is to specify the number of events, in this case 50:
 ```python
 redshifts, distances, errors = gwc.LIGO(events=50)
 ```
@@ -121,7 +121,7 @@ $ gwc generate LIGO --events 50 --ideal
 ```
 
 
-### Getting GWTC events
+### GWTC
 The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
 
 Here we provide the data found in GWTC-1, GWTC-2 and GWTC-3, where the redshifts, luminosity distances and errors come directly from the database. The error in both redshift and luminosity distance is made symmetric, and the redshift error propagated to the luminosity distance.
@@ -183,12 +183,12 @@ Which you can easily import later with:
 redshifts, distances, errors = gwc.load("sample.csv")
 ```
 
-In the CLI you can also provide the output file using the `-o`, `--output` flag, which allows you to save whatever it is that the command returns, if you want to save a MBHB catalog which you just generated:
+In the CLI you can also provide the output file using the `-o`, `--output` flag, which allows you to save whatever it is that the command returns, if you want to save a LISA mock catalog:
 ```console
-$ gwc --output MBHB.csv generate MBHB -p "No Delay" -e 15
+$ gwc --output LISA.csv generate LISA -p "No Delay" -e 15
 ```
 
-Just the the cosmology flag, the output flag is a global flag, meaning that it should come before any subcommand.
+Just the the cosmology flag, the output flag is a global flag, meaning that it should come before any subcommand. The file also provides some comments, which provide information on how the catalog was generated.
 
 ### Checking underlying distributions
 To understand what's working in the background, you can plot the redshift distribution for each MBHB population:
@@ -199,7 +199,7 @@ gwc.MBHB_dist()
 
 Being the CLI equivalent:
 ```console
-$ gwc debug MBHB --distribution
+$ gwc debug LISA --distribution
 ```
 
 And you can also plot the errors for the MBHBs as a function of redshift:
@@ -210,10 +210,10 @@ gwc.MBHB_error()
 
 With the CLI equivalent:
 ```console
-$ gwc debug MBHB --error
+$ gwc debug LISA --error
 ```
 
-Where the same applies for BNS and LIGO, all you have to do is replace MBHB by BNS or LIGO where appropriate. Because GWTC includes real data there is no underlying distribution.
+Where the same applies for ET and LIGO, all you have to do is replace LISA by ET or LIGO where appropriate. Because GWTC includes real data there is no underlying distribution.
 
 
 ## References
