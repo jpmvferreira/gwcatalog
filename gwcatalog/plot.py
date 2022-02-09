@@ -9,7 +9,7 @@ from .auxiliary import dL_line
 
 
 # plot a given mock catalog [redshifts:list, distances:list, errors:list, label:str]
-def plot(*args, theoretical=False, output=None):
+def plot(*args, theoretical=None, output=None):
     # custom colors that match the ones i use in getdist
     colors = ["#006FED", "#E03424", "#008000", "#9c5500", "#9224e0", "#ed00e6", "#f2e400", "#00f2e4", "#6fd95f"]
 
