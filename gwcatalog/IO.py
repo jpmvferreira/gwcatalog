@@ -16,11 +16,9 @@ def save(redshifts, distances, errors, filename, info=""):
         file = filename
 
     # header
-    if file != sys.stdout:
-        if info:
-            file.write(info + "\n")
-            file.write("\n")
-        file.write("# units: none, Gpc, Gpc\n")
+    if info:
+        file.write(info + "\n")
+    file.write("# units: none, Gpc, Gpc\n")
 
     # body
     file.write("redshift,luminosity_distance,error\n")
