@@ -77,7 +77,7 @@ To ensure that the terminal version is working, call the program `gwc` with the 
 In this section we will show you how you can use this program to generate catalogs of standard siren events, both in Python and in the CLI.
 
 ### GWTC
-The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
+The Gravitational Wave Transient Catalog (GWTC) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
 
 Here we provide the data found in GWTC-1, GWTC-2 and GWTC-3, with the redshifts, luminosity distances and errors coming directly from the previously mentioned database, symmetrizing both the redshift and luminosity distance error and then propagate the redshift error to the luminosity distance.
 
@@ -93,7 +93,7 @@ $ gwc generate GWTC
 
 
 ### LIGO
-Although currently operational, here we will focus our efforts on generating forecast events for [LIGO](https://www.ligo.caltech.edu/).
+Although currently operational, here we will focus our efforts on generating forecast events for the Laser Interferometer Gravitational-Wave Observatory (LIGO).
 
 The redshift distribution is given in [[4]](#4), while the error for each measurement is provided in [[5]](#5).
 
@@ -121,15 +121,15 @@ $ gwc generate LIGO --events 50 --ideal
 
 
 ### LISA
-In this section we will generate [LISA](https://lisa.nasa.gov/) mock catalogs.
+In this subsection we will generate standard sirens mock catalogs for the Laser Interferometer Space Antenna (LISA).
 
 The redshift distribution is provided in [[2]](#2), which corresponds to the mission specification L6A2M5N2, with modifications and errors as outlined in [[1]](#1).
 
-To generate the LISA mock catalog you must specify two things: A population of MBHB (either "Pop III", "Delay" or "No Delay") and specify either the number of years for the space mission or the number of observed events.
+To generate the LISA mock catalog you must specify two things: A population of massive black hole binaries (MBHB), either "Pop III", "Delay" or "No Delay", and specify either mission lifetime in years or the number of observed events.
 
 For example if you wish to generate the result of a 4 year mission lifetime of population "Pop III" events:
 ```python
-redshifts, distances, errors = gwc.LISA("Pop III", years=4)
+redshifts, distances, errors = gwc.LISA(population="Pop III", years=4)
 ```
 
 The CLI equivalent would be:
@@ -139,7 +139,7 @@ $ gwc generate LISA --population "Pop III" --years 4
 
 If instead you would like to generate 15 events of the population "No Delay":
 ```python
-redshifts, distances, errors = gwc.LISA("No Delay", events=15)
+redshifts, distances, errors = gwc.LISA(population="No Delay", events=15)
 ```
 
 Or in the CLI:
@@ -148,7 +148,7 @@ $ gwc generate LISA --population "No Delay" --events 15
 ```
 
 ### ET
-Here we will show how to generate a mock catalog for the [ET](http://www.et-gw.eu/).
+Here we will show how to generate a mock catalog for the Einstein Telescope (ET).
 
 Both the redshift distribution and error distribution used to generate the mock catalogs are provided in [[3]](#3).
 
