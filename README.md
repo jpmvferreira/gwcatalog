@@ -1,8 +1,6 @@
 ## About
-A Python package and a CLI that generates catalogs of standard sirens events.
-
-Currently, it is able to generate the following standard sirens catalogs:
-- GWTC real data (with redshift errors propagated to luminosity distance, which are set to be symmetric)
+A Python package and a CLI that generates catalogs of standard sirens events, which currently supports the following sources:
+- GWTC real data
 - LIGO forecasts
 - LISA forecasts
 - ET forecasts
@@ -35,8 +33,7 @@ Currently, it is able to generate the following standard sirens catalogs:
 To avoid conflicts the usage of virtual environments is recommended.
 
 ### Dependencies
-This package requires the usage of Python version 3, as well as the following packages:
-
+This program requires Python version 3, as well as the following packages:
 - [Numpy](https://numpy.org/)
 - [Scipy](https://www.scipy.org/)
 - [Matplotlib](https://matplotlib.org/)
@@ -45,36 +42,39 @@ This package requires the usage of Python version 3, as well as the following pa
 Dependencies are automatically resolved by `pip`.
 
 ### Stable version
-A stable version is not yet available, look below on how to install this package.
+This program can be installed directly from PyPI with:
+```console
+$ pip install gwcatalog
+```
 
 ### Development version
-If you wish to use this package updated to the latests commits, you can install this package directly from the development branch on this repository using `pip`:
+If you wish to use this program updated to the latests commits, you can install this package directly from the development branch present in this repository:
 ```console
 $ pip install -e git+https://github.com/jpmvferreira/gwcatalog.git@dev#egg=gwcatalog
 ```
 
-If instead you wish to make changes to the source code, start by cloning the development branch locally followed by an installation in editable mode:
+If instead you wish to make changes to the source code as you are using the program, start by cloning the development branch locally, followed by an installation in editable mode:
 ```console
 $ git clone -b dev https://github.com/jpmvferreira/gwcatalog
 $ pip install -e gwcatalog
 ```
 
 ### Post installation
-You can either use this program as a Python package or as a CLI. The following guide will show you how to use both. Both provide access to the same features, except when using a custom cosmological model to generate the standard siren catalog, which is available only on the CLI.
+You can either use this program as a Python package or as a CLI.
 
 To ensure that the Python package is operational, import it as:
 ```python
 import gwcatalog as gwc
 ```
 
-While the binary `gwc` should be available directly in your terminal, simply call it with the help dialog:
+To ensure that the terminal version is working, call the program `gwc` with the help flag:
 ```console
 # gwc --help
 ```
 
 
 ## Generating Catalogs
-In this section we will show you how you can use this program to generate catalogs of standard siren events.
+In this section we will show you how you can use this program to generate catalogs of standard siren events, both in Python and in the CLI.
 
 ### GWTC
 The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
@@ -272,11 +272,11 @@ The contents in this repository were developed by myself, you can contact me in 
 
 
 ## Contributing
-Any discussion, suggestions, pull requests or bug reports are always welcome. If you wish to submit you code, pull requests should be targeted towards the dev branch, otherwise, feel free to use this issue section in this repository, or even send me an email.
+Any discussion, suggestions, pull requests or bug reports are always welcome. If you wish to submit you code, pull requests should be targeted towards the dev branch, otherwise, feel free to use this issue section in this repository for everything else, or even send me an email.
 
 
 ## Release cycle
-All versions will have the format X.Y.Z, with the first one being 1.0.0, which will be released as soon as I think both the code and documentation are good enough to be shared.
+All versions will have the format X.Y.Z, with the first one being 1.0.0, which will be released as soon as I think that both the code and the documentation are good enough to be shared.
 
 Each time that there is an update which does not modify the program behavior (e.g.: documentation, packaging) it will increment Z (e.g.: 1.0.0 -> 1.0.1).
 
@@ -284,7 +284,7 @@ Each time that there is an update which modifies the program behavior (e.g.: add
 
 Each time that there is an update which is not backwards compatible (e.g.: removing features, fundamental change on how the program is used) it will increment X and reset both Y and Z (e.g.: 1.1.2 -> 2.0.0).
 
-In this repository you will find branches for the stable version (master) and the development version (dev). All modifications are done in the development branch and, after being tested, are included in the stable version, with the appropriate version bump.
+In this repository you will find two branches: the stable branch (master) and the development branch (dev). All modifications are done in the development branch and, after being properly tested, are merged in the stable branch, with the appropriate version bump.
 
 
 ## License
