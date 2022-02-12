@@ -1,9 +1,11 @@
 ## About
-A Python package and a CLI that generates catalogs of gravitational wave (GW) events from different astrophysical sources, for different observatories.
+A Python package and a CLI that generates catalogs of standard sirens events.
 
-Currently generates standard siren mock catalogs for LISA, ET and LIGO. It also gives you access to the (real) events from the GWTC catalog, where the luminosity distance is obtained directly from the gravitational wave and the redshift estimated using ΛCDM by the LIGO/VIRGO/KAGRA collaboration, with symmetric errors.
-
-It also provides ease of access to check the underlying redshift and error distributions, used to generate the mock catalogs.
+Currently, it is able to generate the following standard sirens catalogs:
+- GWTC real data (with redshift errors propagated to luminosity distance, which are set to be symmetric)
+- LIGO forecasts
+- LISA forecasts
+- ET forecasts
 
 
 ## Table of contents
@@ -11,20 +13,22 @@ It also provides ease of access to check the underlying redshift and error distr
   - [Dependencies](#dependencies)
   - [Stable version](#stable-version)
   - [Development version](#development-version)
-- [Quick start](#quick-start)
-  - [LISA mock catalog](#lisa-mock-catalog)
-  - [ET mock catalog](#et-mock-catalog)
-  - [LIGO mock catalog](#ligo-mock-catalog)
+  - [Post installation](#post-installation)
+- [Generating Catalogs](#generating-catalogs)
   - [GWTC](#gwtc)
+  - [LIGO](#ligo)
+  - [LISA](#lisa)
+  - [ET](#et)
+- [Other Features](#other-features)
+  - [Saving and loading catalogs](#saving-and-loading-catalogs)
   - [Plotting catalogs](#plotting-catalogs)
   - [Changing default cosmological model](#changing-default-cosmological-model)
-  - [Saving and loading catalogs](#saving-and-loading-catalogs)
-  - [Checking underlying distributions](#checking-underlying-distributions)
-- [References](#references)
+  - [Debug](#debug)
 - [Credits](#credits)
 - [Contributing](#contributing)
 - [Release cycle](#release-cycle)
 - [License](#license)
+- [References](#references)
 
 
 ## Installation
@@ -44,7 +48,7 @@ Dependencies are automatically resolved by `pip`.
 A stable version is not yet available, look below on how to install this package.
 
 ### Development version
-To get the latest commits then you can install this package directly from the development branch:
+If you wish to use this package updated to the latests commits, you can install this package directly from the development branch on this repository using `pip`:
 ```console
 $ pip install -e git+https://github.com/jpmvferreira/gwcatalog.git@dev#egg=gwcatalog
 ```
@@ -55,52 +59,47 @@ $ git clone -b dev https://github.com/jpmvferreira/gwcatalog
 $ pip install -e gwcatalog
 ```
 
+### Post installation
+You can either use this program as a Python package or as a CLI. The following guide will show you how to use both. Both provide access to the same features, except when using a custom cosmological model to generate the standard siren catalog, which is available only on the CLI.
 
-## Quick start
-You can either use this program as a Python package or as a CLI, where both provide access to the same features. This quick start guide will also show you how to use both.
-
-### LISA mock catalog
-The MBHB redshift distribution is provided by the mission specification L6A2M5N2 provided in [[2]](#2), with modifications and errors found in [[1]](#1).
-
-To generate the LISA mock catalog you must select a population of MBHB, either "Pop III", "Delay" or "No Delay", and specify either the number of years or events to generate the catalog.
-
-For example if you wish to generate 4 years worth of Pop III MBHB events measured by LISA:
+To ensure that the Python package is operational, import it as:
 ```python
-redshifts, distances, errors = gwc.LISA("Pop III", years=4)
+import gwcatalog as gwc
 ```
 
-The CLI equivalent would be:
+While the binary `gwc` should be available directly in your terminal, simply call it with the help dialog:
 ```console
-$ gwc generate LISA "Pop III" --years 4
+# gwc --help
 ```
 
-If instead you would like to generate 15 events of the population No Delay:
+
+## Generating Catalogs
+In this section we will show you how you can use this program to generate catalogs of standard siren events.
+
+### GWTC
+The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
+
+Here we provide the data found in GWTC-1, GWTC-2 and GWTC-3, with the redshifts, luminosity distances and errors coming directly from the previously mentioned database, symmetrizing both the redshift and luminosity distance error and then propagate the redshift error to the luminosity distance.
+
+To obtain that data simply call the function with no arguments:
 ```python
-redshifts, distances, errors = gwc.LISA("No Delay", events=15)
+redshifts, distances, errors = gwc.GWTC()
 ```
 
 And in the CLI:
 ```console
-$ gwc generate LISA "Pop III" --events 15
+$ gwc generate GWTC
 ```
 
-### ET mock catalog
-The BNS redshift and error distribution used to generate the ET mock catalog are provided in [[3]](#3).
 
-In this example we will generate a mock catalog with 1000 events:
-```python
-redshifts, distances, errors = gwc.ET(events=1000)
-```
+### LIGO
+Although currently operational, here we will focus our efforts on generating forecast events for [LIGO](https://www.ligo.caltech.edu/).
 
-Being the CLI equivalent:
-```console
-$ gwc generate ET --events 1000
-```
+The redshift distribution is given in [[4]](#4), while the error for each measurement is provided in [[5]](#5).
 
-### LIGO mock catalog
-The redshift distribution of the LIGO forecats events are given in [[4]](#4), while the error is provided in [[5]](#5).
+To generate a mock catalog for LIGO all you need is to specify the number of events.
 
-To generate a mock catalog for LIGO all you need is to specify the number of events, in this case 50:
+If, for example, you wish to generate a mock catalog consisting of 50 events:
 ```python
 redshifts, distances, errors = gwc.LIGO(events=50)
 ```
@@ -115,114 +114,135 @@ There is also an added option to generate an ideal catalog, i.e. a catalog where
 redshifts, distances, errors = gwc.LIGO(events=50, ideal=True)
 ```
 
-And in the CLI:
+Or in the CLI:
 ```console
 $ gwc generate LIGO --events 50 --ideal
 ```
 
 
-### GWTC
-The GWTC (Gravitational Wave Transient Catalog) is a cumulative set of gravitational wave transients maintained by the LIGO/Virgo/KAGRA collaboration, available online at [gw-openscience.org](https://www.gw-openscience.org/eventapi/html/GWTC/).
+### LISA
+In this section we will generate [LISA](https://lisa.nasa.gov/) mock catalogs.
 
-Here we provide the data found in GWTC-1, GWTC-2 and GWTC-3, where the redshifts, luminosity distances and errors come directly from the database. The error in both redshift and luminosity distance is made symmetric, and the redshift error propagated to the luminosity distance.
+The redshift distribution is provided in [[2]](#2), which corresponds to the mission specification L6A2M5N2, with modifications and errors as outlined in [[1]](#1).
 
-To obtain that data simply call the function with no arguments, as the number of events are the ones observed so far by the provided observatories:
+To generate the LISA mock catalog you must specify two things: A population of MBHB (either "Pop III", "Delay" or "No Delay") and specify either the number of years for the space mission or the number of observed events.
+
+For example if you wish to generate the result of a 4 year mission lifetime of population "Pop III" events:
 ```python
-redshifts, distances, errors = gwc.GWTC()
+redshifts, distances, errors = gwc.LISA("Pop III", years=4)
 ```
 
-And in the CLI:
+The CLI equivalent would be:
 ```console
-$ gwc generate GWTC
+$ gwc generate LISA --population "Pop III" --years 4
 ```
 
-
-### Plotting catalogs
-If you are inside a Python script, you can plot your catalog with:
-
+If instead you would like to generate 15 events of the population "No Delay":
 ```python
-gwc.plot(redshifts, distances, errors, "catalog1")
+redshifts, distances, errors = gwc.LISA("No Delay", events=15)
 ```
 
-Where "catalog1" is the label you want to show in the legends of your plot.
+Or in the CLI:
+```console
+$ gwc generate LISA --population "No Delay" --events 15
+```
 
-You can actually provide more than one catalog, as long as the number of arguments and the order remains the same. So if you have anoter catalog with variables `redshift2`, `distances2` and `errors2` and you name it "catalog2", you can have them both in the same plot with:
+### ET
+Here we will show how to generate a mock catalog for the [ET](http://www.et-gw.eu/).
+
+Both the redshift distribution and error distribution used to generate the mock catalogs are provided in [[3]](#3).
+
+To generate a mock catalog for the ET the only requirement is to provide the number of events you wish to have in your catalog.
+
+For example, if you wish to generate a mock catalog with 1000 events:
 ```python
-gwc.plot(redshifts, distances, errors, "catalog1", redshifts2, distances2, errors2, "catalog2")
+redshifts, distances, errors = gwc.ET(events=1000)
 ```
 
-This also works in the CLI, given that the catalogs are stored in different files. Assuming that you have `catalog1.csv` and `catalog2.csv` you can plot them both with:
+Being the CLI equivalent:
 ```console
-$ gwc plot --input catalog1.csv catalog2.csv
+$ gwc generate ET --events 1000
 ```
 
-If you want to change their labels in the CLI, the equivalent of providing a name in the Python script, you can do so with:
-```console
-$ gwc plot --input catalog1.csv catalog2.csv --legend "catalog 1" "catalog 2"
-```
 
-### Changing default cosmological model
-This feature is only available in the CLI, to do so, simply point towards a Python script where both `H(z)` and `dL(z, H)` are defined with `-c`, `--cosmology` flag, followed by the desired subcommand (which is omitted here):
-```console
-$ gwc --cosmology mycosmology.py (...)
-```
-
-This is a global flag, which means it should always be present before any of the available subcommands.
-
-Optionally you may add a variable named `description` in the previous file, that should be a string with a descriptive name of the cosmology being used. That string will be printed in the .csv file provided as output, which you will learn about in the next section. This feature is only available in the CLI.
-
-Here's an example for such a script, for ΛCDM, with custom fiducial values:
-```python
-# imports
-from scipy.integrate import quad
-
-
-# Hubble function
-def H(z):
-    # Hubble constant
-    H0 = 70
-    H0 = H0*3.240779289*10**(-20)
-
-    # value for Ωm
-    Ωm = 0.3087
-
-    return H0*(Ωm*(1+z)**3 + 1-Ωm)**0.5
-
-
-# luminosity distance
-def dL(z, H):
-    c = 9.715611890800001e-18  # speed of light [Gpc/s]
-    return (1+z) * c * quad(lambda Z: 1/H(Z), 0, z)[0]
-
-
-# description
-description = "ΛCDM (Ωm = 0.3087, H0 = 67.64 km s⁻¹ Mpc⁻¹)"
-```
+## Other Features
+Here we list other features which are available in this package, developed in order to facilitate common operations.
 
 
 ### Saving and loading catalogs
 This package also includes an easy way to save your catalogs to a `.csv` file:
 ```python
-gwc.save(z, dL, error, "sample.csv")
+gwc.save(redshifts, distances, errors, "catalog.csv")
 ```
 
 Which you can easily import later with:
 ```python
-redshifts, distances, errors = gwc.load("sample.csv")
+redshifts, distances, errors = gwc.load("catalog.csv")
 ```
 
 In the CLI you can also provide the output file using the `-o`, `--output` flag, which allows you to save whatever it is that the command returns, if you want to save a LISA mock catalog:
 ```console
-$ gwc --output LISA.csv generate LISA -p "No Delay" -e 15
+$ gwc --output catalog.csv generate LISA --population "No Delay" --events 15
 ```
 
-Just the the cosmology flag, the output flag is a global flag, meaning that it should come before any subcommand. The file also provides some comments, which provide information on how the catalog was generated.
+The output flag is a global flag, meaning that it should come before any subcommand.
 
-### Checking underlying distributions
-To understand what's working in the background, you can plot the redshift distribution for each MBHB population:
 
+### Plotting catalogs
+If you are inside a Python script, you can plot your catalog, along with its label, which in this case is "catalog1", with:
 ```python
-gwc.MBHB_dist()
+gwc.plot(redshifts, distances, errors, "catalog1")
+```
+
+The CLI equivalent, where the data is stored in `catalog1.csv`:
+```console
+$ gwc plot --input catalog1.csv --legend "catalog 1"
+```
+
+You can provide more than one catalog, as long as the number of arguments and the order remains the same. So if you have another catalog with variables `redshift2`, `distances2` and `errors2`, and you would like to label it as "catalog2", you can have them both in the same plot with:
+```python
+gwc.plot(redshifts, distances, errors, "catalog1", redshifts2, distances2, errors2, "catalog2")
+```
+
+Being the CLI equivalent, where both catalog are stored as files:
+```console
+$ gwc plot --input catalog1.csv catalog2.csv --legend "catalog 1" "catalog 2"
+```
+
+You can also plot the theoretical line of the default cosmological model, with a custom label that supports LaTeX (e.g.: "$\LambdaCDM$"):
+```python
+gwc.plot(redshifts, distances, errors, "catalog1", theoretical="$\LambdaCDM$")
+```
+
+And in the CLI
+```console
+$ gwc plot --input catalog1.csv --legend "catalog 1" --theoretical "$\LambdaCDM$"
+```
+
+
+### Changing default cosmological model
+Allows you to use a custom cosmological model when generating your samples.
+
+This feature is only available in the CLI.
+
+To do so, write a Python script that defines two functions, both `H(z)` and `dL(z, H)`, and then using the `-c`, `--cosmology` flag, point it towards the previously mentioned Python script.
+
+For example, if you wish to use a custom cosmology, defined in `mycosmology.py`, to generate 1000 events for ET:
+```console
+$ gwc --cosmology mycosmology.py generate ET --events 1000
+```
+
+This is a global flag, which means it should always be present before any of the available subcommands.
+
+Optionally, you may add a variable named `description` to the previous file, that should be a string with a descriptive name of the cosmological model being used, which will be printed in the header of the generated catalogs and kept for future reference.
+
+
+### Debug
+For the sake of transparency, ease of use to check the underlying distributions is provided to the end user.
+
+For LISA, you can plot the probability redshift distribution with:
+```python
+gwc.LISA_dist()
 ```
 
 Being the CLI equivalent:
@@ -230,10 +250,9 @@ Being the CLI equivalent:
 $ gwc debug LISA --distribution
 ```
 
-And you can also plot the errors for the MBHBs as a function of redshift:
-
+And the error as a function of redshift with:
 ```python
-gwc.MBHB_error()
+gwc.LISA_error()
 ```
 
 With the CLI equivalent:
@@ -241,7 +260,37 @@ With the CLI equivalent:
 $ gwc debug LISA --error
 ```
 
-Where the same applies for ET and LIGO, all you have to do is replace LISA by ET or LIGO where appropriate. Because GWTC includes real data there is no underlying distribution.
+The same pattern applies for the ET and LIGO, where all you have to do is replace LISA by ET or LIGO, according to your wish, where appropriate.
+
+Because GWTC includes real data there is no underlying distribution, only the data pulled directly from the GWTC catalog source.
+
+
+## Credits
+The contents in this repository were developed by myself, you can contact me in the following ways:
+- Personal email: [jose@jpferreira.me](mailto:jose@jpferreira.me) - [[PGP key](https://pastebin.com/REkhQKg2)]
+- Institutional email: [joseferreira@alunos.fc.ul.pt](mailto:joseferreira@alunos.fc.ul.pt) - [[PGP key](https://pastebin.com/rfBpi8jc)]
+
+
+## Contributing
+Any discussion, suggestions, pull requests or bug reports are always welcome. If you wish to submit you code, pull requests should be targeted towards the dev branch, otherwise, feel free to use this issue section in this repository, or even send me an email.
+
+
+## Release cycle
+All versions will have the format X.Y.Z, with the first one being 1.0.0, which will be released as soon as I think both the code and documentation are good enough to be shared.
+
+Each time that there is an update which does not modify the program behavior (e.g.: documentation, packaging) it will increment Z (e.g.: 1.0.0 -> 1.0.1).
+
+Each time that there is an update which modifies the program behavior (e.g.: adding features, fixing bugs) it will increment Y and reset Z (e.g.: 1.0.1 -> 1.1.0).
+
+Each time that there is an update which is not backwards compatible (e.g.: removing features, fundamental change on how the program is used) it will increment X and reset both Y and Z (e.g.: 1.1.2 -> 2.0.0).
+
+In this repository you will find branches for the stable version (master) and the development version (dev). All modifications are done in the development branch and, after being tested, are included in the stable version, with the appropriate version bump.
+
+
+## License
+All of the contents provided in this repository are available under the MIT license.
+
+For further information, refer to the file [LICENSE.md](./LICENSE.md) provided in this repository.
 
 
 ## References
@@ -259,31 +308,3 @@ M. Lagos, M. Fishbach, P. Landry, and D. E. Holz, Standard sirens with a running
 
 <a id="5">[5]</a>
 T. Baker and I. Harrison, Constraining scalar-tensor modified gravity with gravitational waves and large scale structure surveys, [Journal of Cosmology and Astroparticle Physics 2021 (01), 068–068](https://doi.org/10.1088/1475-7516/2021/01/068).
-
-
-## Credits
-This was developed by myself. You can contact me in the following ways:
-- Personal email: [jose@jpferreira.me](mailto:jose@jpferreira.me) - [[PGP key](https://pastebin.com/REkhQKg2)]
-- Institutional email: [joseferreira@alunos.fc.ul.pt](mailto:joseferreira@alunos.fc.ul.pt) - [[PGP key](https://pastebin.com/rfBpi8jc)]
-
-
-## Contributing
-Any discussion, suggestions or bug reports are always welcome. If you wish to contribute, do not hesitate to open up an issue in the issue section of this repository, or even send me an e-mail.
-
-
-## Release cycle
-All versions will have the format X.Y.Z, with the first one being 1.0.0, which will be released as soon as I think both the code and documentation are good enough to be shared.
-
-Each time that there is an update which does not modify the program behavior (e.g.: documentation, packaging) it will increment Z (e.g.: 1.0.0 -> 1.0.1).
-
-Each time that there is an update which modifies the program behavior (e.g.: adding features, fixing bugs) it will increment Y and reset Z (e.g.: 1.0.1 -> 1.1.0).
-
-Each time that there is an update which is not backwards compatible (e.g.: removing features, fundamental change on how the program is used) it will increment X and reset both Y and Z (e.g.: 1.1.2 -> 2.0.0).
-
-In this repository you will find branches for the stable version (master) and the development version (dev). All modifications are done in the development branch and, after being tested, are included in the stable version, with the appropriate version bump.
-
-This means that, were you wish to contribute, pull requests should be targeted towards the dev branch.
-
-
-## License
-[MIT](./LICENSE.md)
