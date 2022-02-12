@@ -5,7 +5,7 @@ with open(f"README.md") as f:
 
 setup(name="gwcatalog",
       version="0.0.0",
-      description="A Python package and a CLI that generates catalogs of gravitational wave (GW) events from different astrophysical sources, for different observatories.",
+      description="Generate catalogs of standard siren events.",
       long_description=long_description,
       long_description_content_type="text/markdown",
       install_requires=[
