@@ -1,6 +1,5 @@
 ## LISA.py
-# all functions related to massive black hole binaries (MBHBs)
-# both the distributions and errors are forecasts for the Laser Interferometer Space Antenna (LISA)
+# all functions related to LISA
 
 
 # imports
@@ -17,26 +16,22 @@ from .cosmology import H, dL
 # redshift distribution for the MBHB events for the L6A2M5N2 LISA mission over 5 years duration time
 # from arXiv:1607.08755, middle plot of figure 9 in page 21
 # modified to include no events at low redshifts (z < 0.1)
-def dist(label):
+def dist(population):
     # redshift limits
     z_min = 0.1
     z_max = 9
 
     # Pop III
-    if label == "Pop III":
+    if population == "Pop III":
         dist = [2.012, 7.002, 8.169, 5.412, 3.300, 1.590, 0.624, 0.141, 0.000]
 
     # Delay
-    elif label == "Delay":
+    elif population == "Delay":
         dist = [0.926, 4.085, 5.976, 5.131, 4.769, 2.656, 1.710, 0.644, 0.362]
 
     # No Delay
-    elif label == "No Delay":
+    elif population == "No Delay":
         dist = [3.682, 10.28, 9.316, 7.646, 4.909, 2.817, 1.187, 0.362, 0.161]
-
-    # no such label exists
-    else:
-        raise Exception("Population not available, available populations are: Pop III, Delay, No Delay")
 
     # get total number of events
     N = sum(dist)
@@ -86,16 +81,20 @@ def error(z, dL, H):
     return sqrt(sigma_delens(z, dL, H)**2 + sigma_v(z, dL, H)**2 + sigma_LISA(z, dL, H)**2 + sigma_photo(z, dL, H)**2)
 
 
-# generate MBHB event(s)
-def generate(label, events=0, years=0):
+# generate LISA event(s)
+def generate(population=None, events=0, years=0):
     # protection against invalid arguments
+    if not population:
+        raise Exception("The population of MBHB must be provided, available populations are: 'Pop III', 'Delay' and 'No Delay'")
+    if population not in ["Pop III", "Delay", "No Delay"]:
+        raise Exception("Population not available, available populations are: 'Pop III', 'Delay' and 'No Delay'")
     if events == 0 and years == 0:
         raise Exception("Please specify the number of events or years to generate the mock catalog.")
     if events != 0 and years != 0:
         raise Exception("Both number of events and years were specified, please pick one.")
 
     # get distribution for the standard sirens
-    distribution = dist(label)
+    distribution = dist(population)
 
     # get number of events
     if events != 0:
@@ -118,19 +117,19 @@ def generate(label, events=0, years=0):
 # plot all MBHB redshift distributions
 # reproduces the middle plot of figure 9, in page 21, from arXiv:1607.08755, with no events in z < 0.1
 def plot_dist(output=None):
-    labels = ["Pop III", "Delay", "No Delay"]
+    populations = ["Pop III", "Delay", "No Delay"]
     colors = ["red", "blue", "green"]
 
-    for label, color in zip(labels, colors):
-        f, z_min, z_max, min, max, N = dist(label)
+    for population, color in zip(populations, colors):
+        f, z_min, z_max, min, max, N = dist(population)
 
         line = np.linspace(z_min, z_max, 1000).tolist()
 
         events = [f(i) for i in line]
 
-        print(f"Sum of all events for {label} in 5 years is {N}")
+        print(f"Sum of all events for population {population} in 5 years is {N}")
 
-        plt.plot(line, events, color="dark" + color, zorder=2.5, label=label)
+        plt.plot(line, events, color="dark" + color, zorder=2.5, label=population)
         plt.grid(alpha=0.5, zorder=0.5)
         plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
