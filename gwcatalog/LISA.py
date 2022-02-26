@@ -82,16 +82,25 @@ def error(z, dL, H):
 
 
 # generate LISA event(s)
-def generate(population=None, events=0, years=0):
+def generate(population=None, events=0, years=0, redshifts=[]):
     # protection against invalid arguments
     if not population:
         raise Exception("The population of MBHB must be provided, available populations are: 'Pop III', 'Delay' and 'No Delay'")
     if population not in ["Pop III", "Delay", "No Delay"]:
         raise Exception("Population not available, available populations are: 'Pop III', 'Delay' and 'No Delay'")
-    if events == 0 and years == 0:
-        raise Exception("Please specify the number of events or years to generate the mock catalog.")
-    if events != 0 and years != 0:
-        raise Exception("Both number of events and years were specified, please pick one.")
+    # TO-DO: dar fix a isto mais tarde com operadores logicos e mensagem generica de fracasso
+    # if events == 0 and years == 0:
+    #     raise Exception("Please specify the number of events or years to generate the mock catalog.")
+    # if events != 0 and years != 0:
+    #     raise Exception("Both number of events and years were specified, please pick one.")
+
+    # return the events for the corresponding luminosity distance
+    if redshifts:
+        N = len(redshifts)
+        distances = [dL(z, H) for z in redshifts]
+        errors = [error(z, dL, H) for z in redshifts]
+
+        return redshifts, distances, errors
 
     # get distribution for the standard sirens
     distribution = dist(population)
