@@ -17,31 +17,29 @@ from .cosmology import H, dL
 # from arXiv:1607.08755, middle plot of figure 9 in page 21
 # modified to include no events at low redshifts (z < 0.1)
 def dist(population):
-    # redshift limits
-    z_min = 0.1
-    z_max = 9
+    # redshift boundaries for LISA
+    zmin = 0.1
+    zmax = 9
 
-    # Pop III
+    # distribution for the provided population
     if population == "Pop III":
         dist = [2.012, 7.002, 8.169, 5.412, 3.300, 1.590, 0.624, 0.141, 0.000]
 
-    # Delay
     elif population == "Delay":
         dist = [0.926, 4.085, 5.976, 5.131, 4.769, 2.656, 1.710, 0.644, 0.362]
 
-    # No Delay
     elif population == "No Delay":
         dist = [3.682, 10.28, 9.316, 7.646, 4.909, 2.817, 1.187, 0.362, 0.161]
 
-    # get total number of events
+    # get the total number of events
     N = sum(dist)
 
-    # normalize distribution
+    # normalize the distribution
     dist = [i/N for i in dist]
 
-    # get minimum and maximum of redshift distribution
-    dist_min = min(dist)
-    dist_max = max(dist)
+    # get the minimum and maximum of the redshift distribution
+    dmin = min(dist)
+    dmax = max(dist)
 
     # define our redshift distribution function
     def f(z):
@@ -49,7 +47,7 @@ def dist(population):
             return 0
         return dist[floor(z)]
 
-    return (f, z_min, z_max, dist_min, dist_max, N)
+    return (f, zmin, zmax, dmin, dmax, N)
 
 
 # errors for the luminosity distance
@@ -93,17 +91,17 @@ def generate(population=None, events=0, years=0, redshifts=[]):
     #     raise Exception("Please specify the number of events or years to generate the mock catalog.")
     # if events != 0 and years != 0:
     #     raise Exception("Both number of events and years were specified, please pick one.")
+    # meter tambem uma protecao caso os redshifts especificados saiam fora do range da LISA (ir buscar a funcao)
 
-    # return the events for the corresponding luminosity distance
+    # return the luminosity distance and errors, if specific redshifts were provided
     if redshifts:
-        N = len(redshifts)
         distances = [dL(z, H) for z in redshifts]
         errors = [error(z, dL, H) for z in redshifts]
 
         return redshifts, distances, errors
 
-    # get distribution for the standard sirens
-    distribution = dist(population)
+    # get the redshift distribution function, minimums/maximums and number of events for that distribution
+    f, zmin, zmax, dmin, dmax, N = dist(population)
 
     # get number of events
     if events != 0:

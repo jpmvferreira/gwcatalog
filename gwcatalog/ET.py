@@ -27,17 +27,26 @@ def r(z):
 
 # return the normalized redshift distribution function for the BNS events
 # from arXiv:1805.08731, page 13
-def dist(dL, H, r, events, zmin, zmax):
+def dist(dL, H, r, events):
+    # redshift boundaries for the ET
+    zmin = 0.07
+    zmax = 2
+
     # normalizing constant
     N = events * (quad(lambda Z: (4*pi*r(Z)*(dL(Z, H))**2) / (H(Z)*(1+Z)**3), zmin, zmax)[0])**(-1)
 
-    # define our redshift distribution function
+    # redshift distribution function
     def f(z):
         if z < zmin or z > zmax:
             return 0
         return (4*pi*N*r(z)*(dL(z, H))**2) / (H(z)*(1+z)**3)
 
-    return f
+    # get the minimum and the maximum of the distribution
+    # WARNING: this is very ad-hoc as it assumes f(1) to be the maximum of the distribution - fix this!
+    dmax = f(1)*1.05
+    dmin = 0
+
+    return (f, zmin, zmax, dmin, dmax, events)
 
 
 # errors for the luminosity distance
@@ -47,30 +56,29 @@ def error(z, dL, H):
 
 
 # generate BNS(s) events
-def generate(events=0):
+def generate(events=0, redshifts=[]):
     # check if number of events was provided
-    if events == 0:
-        raise Exception("specify the number of BNS events")
+    #if events == 0:
+    #    raise Exception("specify the number of BNS events")
 
-    # redshift boundaries
-    zmin = 0.07
-    zmax = 2
+    # return the luminosity distance and errors, if specific redshifts were provided
+    if redshifts:
+        distances = [dL(z, H) for z in redshifts]
+        errors = [error(z, dL, H) for z in redshifts]
 
-    # get distribution function
-    f = dist(dL, H, r, events, zmin, zmax)
+        return redshifts, distances, errors
 
-    # get maximum to use in rejection method
-    max = f(1)*1.05
+    # get redshift distribution function
+    f, zmin, zmax, dmin, dmax, events = dist(dL, H, r, events)
 
-    # get redshift distribution
-    min = 0
-    redshifts = GetRandom(f, zmin, zmax, min, max, N=events)
+    # get the redshifts for the events
+    redshifts = GetRandom(f, zmin, zmax, dmin, dmax, N=events)
 
-    # get luminosity distances and its error
+    # get luminosity distance and the error for each event
     distances = [dL(z, H) for z in redshifts]
     errors = [error(z, dL, H) for z in redshifts]
 
-    # use a gaussian to distribute events around the theoretical value with its error as standard deviation
+    # distribute the events around the most likely value using a gaussian distribution
     for i in range(0, events):
         distances[i] = gauss(distances[i], errors[i])
 
@@ -87,7 +95,7 @@ def plot_dist(output=None):
     # get distribution function with 1000 events
     events = 1000
     print(f"Total number of events considered to plot the distribution = {events}")
-    f = dist(dL, H, r, events, zmin, zmax)
+    f, zmin, zmax, dmin, dmax, events = dist(dL, H, r, events)
 
     # get distribution value
     distribution = []
