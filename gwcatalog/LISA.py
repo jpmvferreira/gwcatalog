@@ -5,15 +5,14 @@
 # imports
 from math import pi, sqrt, atan, floor
 import matplotlib.pyplot as plt
-from random import gauss
 import numpy as np
 
 # local imports
-from .auxiliary import GetRandom, dL_line
+from .auxiliary import GetRandom, dL_line, distribute
 from .cosmology import H, dL
 
 
-# redshift distribution for the MBHB events for the L6A2M5N2 LISA mission over 5 years duration time
+# redshift distribution of the MBHB events for the L6A2M5N2 LISA mission over 5 years
 # from arXiv:1607.08755, middle plot of figure 9 in page 21
 # modified to include no events at low redshifts (z < 0.1)
 def dist(population):
@@ -21,7 +20,7 @@ def dist(population):
     zmin = 0.1
     zmax = 9
 
-    # distribution for the provided population
+    # probability distribution for the provided population
     if population == "Pop III":
         dist = [2.012, 7.002, 8.169, 5.412, 3.300, 1.590, 0.624, 0.141, 0.000]
 
@@ -32,7 +31,7 @@ def dist(population):
         dist = [3.682, 10.28, 9.316, 7.646, 4.909, 2.817, 1.187, 0.362, 0.161]
 
     # get the total number of events
-    N = sum(dist)
+    N = dist[0]*0.9 + sum(dist[1:])
 
     # normalize the distribution
     dist = [i/N for i in dist]
@@ -79,44 +78,45 @@ def error(z, dL, H):
     return sqrt(sigma_delens(z, dL, H)**2 + sigma_v(z, dL, H)**2 + sigma_LISA(z, dL, H)**2 + sigma_photo(z, dL, H)**2)
 
 
-# generate LISA event(s)
-def generate(population=None, events=0, years=0, redshifts=[]):
-    # protection against invalid arguments
+# generate the forecast LISA events
+def generate(population=None, events=0, years=0, redshifts=[], ideal=False):
+    # protection against none or invalid population
     if not population:
         raise Exception("The population of MBHB must be provided, available populations are: 'Pop III', 'Delay' and 'No Delay'")
     if population not in ["Pop III", "Delay", "No Delay"]:
         raise Exception("Population not available, available populations are: 'Pop III', 'Delay' and 'No Delay'")
-    # TO-DO: dar fix a isto mais tarde com operadores logicos e mensagem generica de fracasso
-    # if events == 0 and years == 0:
-    #     raise Exception("Please specify the number of events or years to generate the mock catalog.")
-    # if events != 0 and years != 0:
-    #     raise Exception("Both number of events and years were specified, please pick one.")
-    # meter tambem uma protecao caso os redshifts especificados saiam fora do range da LISA (ir buscar a funcao)
 
-    # return the luminosity distance and errors, if specific redshifts were provided
-    if redshifts:
-        distances = [dL(z, H) for z in redshifts]
-        errors = [error(z, dL, H) for z in redshifts]
-
-        return redshifts, distances, errors
+    # specify either events, years or redshifts
+    if bool(events) + bool(years) + bool(redshifts) != 1:
+        raise Exception("Specify either the number of events, years or redshifts")
 
     # get the redshift distribution function, minimums/maximums and number of events for that distribution
     f, zmin, zmax, dmin, dmax, N = dist(population)
 
-    # get number of events
-    if events != 0:
-        N = events
-    elif years != 0:
-        N = int(distribution[-1] * years/5)
+    # get luminosity distance and error for specific redshifts
+    if redshifts:
+        # protect against out of bound redshifts
+        if min(redshifts) < zmin or max(redshifts) > zmax:
+            raise Exception(f"Redshift limits are out of bounds. Lowest and highest redshift for LISA are z={zmin} and z={zmax} correspondingly")
 
-    # get redshifts and the distance and error for each event
-    redshifts = GetRandom(*distribution[:-1], N=N)
-    distances = [dL(z, H) for z in redshifts]
-    errors = [error(z, dL, H) for z in redshifts]
+        distances = [dL(z, H) for z in redshifts]
+        errors = [error(z, dL, H) for z in redshifts]
 
-    # use a gaussian to distribute events around the theoretical line with its error as standard deviation
-    for i in range(0, N):
-        distances[i] = gauss(distances[i], errors[i])
+    # generate events according to the redshift distribution
+    else:
+        if events != 0:
+            N = events
+        elif years != 0:
+            N = int(N * years/5)
+
+        # get redshifts and the distance and error for each event
+        redshifts = GetRandom(f, zmin, zmax, dmin, dmax, N=N)
+        distances = [dL(z, H) for z in redshifts]
+        errors = [error(z, dL, H) for z in redshifts]
+
+    # distribute the events around the most likely value using a gaussian distribution
+    if not ideal:
+        distances, errors = distribute(distances, errors)
 
     return redshifts, distances, errors
 
@@ -137,11 +137,11 @@ def plot_dist(output=None):
         print(f"Sum of all events for population {population} in 5 years is {N}")
 
         plt.plot(line, events, color="dark" + color, zorder=2.5, label=population)
+
+        plt.title("Normalized middle plot from figure 9 of arXiv:1607.08755")
         plt.grid(alpha=0.5, zorder=0.5)
         plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-
         plt.legend()
-
         plt.ylabel("probability density function")
         plt.xlabel("redshift")
 
@@ -188,6 +188,7 @@ def plot_error(output=None):
     plt.plot(line, [i/j for i, j in zip(delens, distances)], color="red", label="$\sigma_{delens}/d_L$")
 
     # fancy up the plot
+    plt.title("Reproducing figure 3 from arXiv:2010.09049")
     plt.yticks([0, 0.05, 0.10, 0.15, 0.20])
     plt.xscale("log")
     plt.xlabel("redshift")

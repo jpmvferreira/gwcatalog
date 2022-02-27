@@ -3,8 +3,7 @@
 
 
 # imports
-from bisect import bisect_right
-from random import uniform
+from random import uniform, gauss
 import numpy as np
 import sys
 import os
@@ -42,23 +41,12 @@ def dL_line(min, max, N=1000):
     return line, distances
 
 
-# find rightmost value less than or equal to x
-def find_le(a, x):
-    i = bisect_right(a, x)
-    if i:
-        return a[i-1]
-    raise ValueError
-
-
-# compute the redshifts given a list of luminosity distances
-def dL_to_redshift(distances, zmin, zmax, N):
-    # get the luminosity distance line
-    line, fiducial_distances = dL_line(zmin, zmax, N)
-
-    # get the redshift for each luminosity distance
-    redshifts = []
+# distribute the events around the most likely value using a gaussian distribution, with protection against negative values
+def distribute(distances, errors):
     for i in range(0, len(distances)):
-        index = np.where( np.isclose(fiducial_distances, find_le(fiducial_distances, distances[i])) )
-        redshifts.append( round(float(line[index]), 3) )
+        newdistance = -1
+        while newdistance < 0:
+            newdistance = gauss(distances[i], errors[i])
+        distances[i] = newdistance
 
-    return redshifts
+    return distances, errors

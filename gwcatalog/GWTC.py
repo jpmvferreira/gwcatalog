@@ -8,7 +8,6 @@ from random import gauss
 import pandas
 
 # local imports
-from .auxiliary import dL_to_redshift
 from .cosmology import H, dL
 
 
