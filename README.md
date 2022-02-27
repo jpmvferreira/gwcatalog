@@ -267,8 +267,8 @@ Because GWTC includes real data there is no underlying distribution, only the da
 
 ## Credits
 The contents in this repository were developed by myself, you can contact me in the following ways:
-- Personal email: [jose@jpferreira.me](mailto:jose@jpferreira.me) - [[PGP key](https://pastebin.com/REkhQKg2)]
-- Institutional email: [joseferreira@alunos.fc.ul.pt](mailto:joseferreira@alunos.fc.ul.pt) - [[PGP key](https://pastebin.com/rfBpi8jc)]
+- Personal email: [jose@jpferreira.me](mailto:jose@jpferreira.me) - [[PGP key](https://pastebin.com/raw/REkhQKg2)]
+- Institutional email: [jpmferreira@fc.ul.pt](mailto:jpmferreira@fc.ul.pt) - [[PGP key](https://pastebin.com/raw/AK2trPBw)]
 
 
 ## Contributing
