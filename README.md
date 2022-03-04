@@ -81,6 +81,8 @@ The Gravitational Wave Transient Catalog (GWTC) is a cumulative set of gravitati
 
 Here we provide the data found in GWTC-1, GWTC-2 and GWTC-3, with the redshifts, luminosity distances and errors coming directly from the previously mentioned database, symmetrizing both the redshift and luminosity distance error and then propagate the redshift error to the luminosity distance.
 
+These are not necessarily standard siren events, however they can be used for testing purposes.
+
 To obtain that data simply call the function with no arguments:
 ```python
 redshifts, distances, errors = gwc.GWTC()
@@ -107,6 +109,16 @@ redshifts, distances, errors = gwc.LIGO(events=50)
 Being the CLI equivalent:
 ```console
 $ gwc generate LIGO --events 50
+```
+
+Instead of specifying the events, you can also provide a list of redshifts which you would like your catalog to have. Naturally, this will ignore the underlying redshift distribution. To create a catalog with user specified redshifts:
+```python
+redshifts, distances, errors = gwc.LIGO(redshifts=[0.1, 0.125, 0.15, 0.175])
+```
+
+And in the CLI:
+```console
+$ gwc generate LIGO --redshifts '[0.1, 0.125, 0.15, 0.175]'
 ```
 
 There is also an added option to generate an ideal catalog, i.e. a catalog where all events lay on top of the theoretical line for the luminosity distance:
@@ -147,6 +159,27 @@ Or in the CLI:
 $ gwc generate LISA --population "No Delay" --events 15
 ```
 
+You can also ignore the underlying redshift distribution and specify the redshift for all events:
+```python
+redshifts, distances, errors = gwc.LISA(population="No Delay", redshifts=[1, 2, 3, 4, 5, 6, 7, 8])
+```
+
+Or in the CLI:
+```console
+$ gwc generate LISA --population "No Delay" --redshifts '[1, 2, 3, 4, 5, 6, 7, 8, 9]'
+```
+
+You also have the option to generate an ideal catalog, where all events lay on top of the theoretical luminosity distance:
+```python
+redshifts, distances, errors = gwc.LISA(population="No Delay", events=15, ideal=True)
+```
+
+Or in the CLI:
+```console
+$ gwc generate LISA --population "No Delay" --events 15 --ideal
+```
+
+
 ### ET
 Here we will show how to generate a mock catalog for the Einstein Telescope (ET).
 
@@ -162,6 +195,26 @@ redshifts, distances, errors = gwc.ET(events=1000)
 Being the CLI equivalent:
 ```console
 $ gwc generate ET --events 1000
+```
+
+You can also decide to specify the redshift for each event:
+```python
+redshifts, distances, errors = gwc.ET(redshifts=[0.5, 1, 1.5])
+```
+
+Where in the CLI you have:
+```console
+$ gwc generate ET --redshifts '[0.5, 1, 1.5]'
+```
+
+And you can also have an ideal catalog, where the events lay on top of the theoretical line for the luminosity distance:
+```python
+redshifts, distances, errors = gwc.ET(events=1000, ideal=True)
+```
+
+Which in the CLI is:
+```console
+$ gwc generate ET --events 1000 --ideal
 ```
 
 
