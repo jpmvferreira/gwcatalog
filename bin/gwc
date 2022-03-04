@@ -272,7 +272,7 @@ if __name__ == "__main__":
     plot_parser_group = plot_parser.add_argument_group("Keyword arguments")
     plot_parser_group.add_argument("-i", "--input", nargs="*", help="Input .csv file(s) that contains the catalog(s) sample(s).", required=True)
     plot_parser_group.add_argument("-l", "--legend", type=str, help="A string with a Python like list with the legend for each parameter, e.g.: \"['\\catalog 1', '\\catalog 2']\". Must match the order of the input files. Defaults to file name.")
-    plot_parser_group.add_argument("-t", "--theoretical", nargs="*", help="Show the luminosity distance theoretical line. Optionally provide a label (latex supported if backslash is used to escape special characters, e.g.: \$ instead of $).")
+    plot_parser_group.add_argument("-t", "--theoretical", const=True, nargs="?", help="Show the luminosity distance theoretical line. Optionally provide a label (latex supported if backslash is used to escape special characters, e.g.: \$ instead of $).")
 
     # sub-command: debug
     debug_subparser = debug_parser.add_subparsers(title="Available catalog types", dest="debug")

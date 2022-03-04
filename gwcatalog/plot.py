@@ -35,10 +35,10 @@ def plot(*args, theoretical=None, output=None):
             zmax = max(redshifts)
 
     # plot luminosity distance theoretical line
-    if theoretical != None:
+    if theoretical:
         line, distances = dL_line(0, zmax*1.05)
-        if len(theoretical) != 0:
-            label = theoretical[0]
+        if type(theoretical) == str:
+            label = theoretical
         else:
             label = ""
         plt.plot(line, distances, label=label, color="black", zorder=2.5, alpha=0.75)
