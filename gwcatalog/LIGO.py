@@ -1,5 +1,5 @@
 ## LIGO.py
-# generate the forecast events for LIGO
+# all functions related to generating forecast catalogs for LIGO (Laser Interferometer Gravitational-Wave Observatory)
 
 
 # imports

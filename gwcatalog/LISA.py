@@ -1,5 +1,5 @@
 ## LISA.py
-# all functions related to LISA
+# all functions related to generating forecast catalogs for LISA (Laser Interferometer Space Antenna)
 
 
 # imports

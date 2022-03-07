@@ -20,3 +20,6 @@ from gwcatalog.plot import plot
 
 # give access to the underlying cosmology
 from gwcatalog.cosmology import H, dL
+
+# version
+__version__ = "1.1.0"

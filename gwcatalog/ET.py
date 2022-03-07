@@ -1,6 +1,5 @@
 ## ET.py
-# all functions related to binary neutron stars (BNSs)
-# both the distributions and errors are forecasts for the Einstein Telescope (ET)
+# all functions related to generating forecast catalogs for the ET (Einstein Telescope)
 
 
 # imports
