@@ -22,4 +22,4 @@ from gwcatalog.plot import plot
 from gwcatalog.cosmology import H, dL
 
 # version
-__version__ = "1.1.0"
+__version__ = "0.0.0"
