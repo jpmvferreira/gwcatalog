@@ -4,7 +4,7 @@ with open(f"README.md") as f:
     long_description = f.read()
 
 setup(name="gwcatalog",
-      version="1.0.0",
+      version="1.1.0",
       scripts=["bin/gwc"],
       packages=["gwcatalog"],
       description="Generate catalogs of standard siren events.",
