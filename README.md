@@ -22,8 +22,8 @@ A Python package and a CLI that generates catalogs of standard sirens events, wh
   - [Plotting catalogs](#plotting-catalogs)
   - [Changing default cosmological model](#changing-default-cosmological-model)
   - [Debug](#debug)
-- [Credits](#credits)
-- [Contributing](#contributing)
+- [Citation](#credits)
+- [Feedback](#feedback)
 - [Release cycle](#release-cycle)
 - [License](#license)
 - [References](#references)
@@ -318,14 +318,27 @@ The same pattern applies for the ET and LIGO, where all you have to do is replac
 Because GWTC includes real data there is no underlying distribution, only the data pulled directly from the GWTC catalog source.
 
 
-## Credits
-The contents in this repository were developed by myself, you can contact me in the following ways:
+## Citation
+This program was developed in the context of [arXiv:2203.13788](https://arxiv.org/abs/2203.13788). Although it is completely independent from it, if you used any of the contents available in this repository, or found it useful in any way, you can cite it using the following BibTeX entry:
+```
+@misc{Ferreira2022,
+  doi = {10.48550/ARXIV.2203.13788},
+  url = {https://arxiv.org/abs/2203.13788},
+  author = {Ferreira, Jos\'e and Barreiro, Tiago and Mimoso, Jos\'e and Nunes, Nelson J.},
+  keywords = {Cosmology and Nongalactic Astrophysics (astro-ph.CO), General Relativity and Quantum Cosmology (gr-qc), FOS: Physical sciences, FOS: Physical sciences},
+  title = {Forecasting F(Q) cosmology with $\Lambda$CDM background using standard sirens},
+  publisher = {arXiv},
+  year = {2022},
+}
+```
+
+
+## Feedback
+Any discussion, suggestions, pull requests or bug reports are always welcome. Feel free to use this issue section in this repository for everything else, or even send me an email at:
 - Personal email: [jose@jpferreira.me](mailto:jose@jpferreira.me) - [[PGP key](https://pastebin.com/raw/REkhQKg2)]
 - Institutional email: [jpmferreira@fc.ul.pt](mailto:jpmferreira@fc.ul.pt) - [[PGP key](https://pastebin.com/raw/AK2trPBw)]
 
-
-## Contributing
-Any discussion, suggestions, pull requests or bug reports are always welcome. If you wish to submit you code, pull requests should be targeted towards the dev branch, otherwise, feel free to use this issue section in this repository for everything else, or even send me an email.
+If you wish to submit you code, pull requests should be targeted towards the dev branch.
 
 
 ## Release cycle
