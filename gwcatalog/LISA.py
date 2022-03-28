@@ -4,6 +4,7 @@
 
 # imports
 from math import pi, sqrt, atan, floor
+from scipy.misc import derivative
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -68,14 +69,13 @@ def sigma_v(z, dL, H):
 def sigma_LISA(z, dL, H):
     return 0.05 * (dL(z, H)**2)/36.6
 
-def sigma_photo(z, dL, H):
-    c = 9.7156118908*10**(-18)  # speed of light [Gpc/s]
+def sigma_photo(z):
     if z < 2:
         return 0
-    return (dL(z, H)/(1+z) + c*(1+z)/H(z)) * 0.03*(1+z)
+    return 0.03*(1+z)
 
 def error(z, dL, H):
-    return sqrt(sigma_delens(z, dL, H)**2 + sigma_v(z, dL, H)**2 + sigma_LISA(z, dL, H)**2 + sigma_photo(z, dL, H)**2)
+    return sqrt(sigma_delens(z, dL, H)**2 + sigma_v(z, dL, H)**2 + sigma_LISA(z, dL, H)**2 + (derivative(dL, z, dx=1e-6, args=(H,)) * sigma_photo(z))**2)
 
 
 # generate the forecast LISA events
@@ -173,7 +173,7 @@ def plot_error(output=None):
     delens = []
     for i in line:
         total.append(error(i, dL, H))
-        photo.append(sigma_photo(i, dL, H))
+        photo.append(sigma_photo(i))
         LISA.append(sigma_LISA(i, dL, H))
         v.append(sigma_v(i, dL, H))
         lens.append(sigma_lens(i, dL, H))

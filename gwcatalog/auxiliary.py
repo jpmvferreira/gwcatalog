@@ -3,6 +3,7 @@
 
 
 # imports
+from scipy.optimize import fsolve
 from random import uniform, gauss
 import numpy as np
 import sys
@@ -29,16 +30,27 @@ def GetRandom(distribution, x_min, x_max, y_min, y_max, N=1):
 
 
 # get the theoretical line for luminosity distance
-def dL_line(min, max, N=1000):
+def dL_line(zmin, zmax, N=1000):
     # protection against invalid arguments
-    if (min < 0 or max < 0) or (max < min):
-        raise Exception("Please specify a valid interval for redshifts.")
+    if (zmin < 0 or zmax < 0) or (zmax < zmin):
+        raise Exception("Please specify a valid redshifts interval.")
 
     # create a "solid line" and compute distances for that line
-    line = np.linspace(min, max, N)
+    line = np.linspace(zmin, zmax, N)
     distances = [dL(i, H) for i in line]
 
     return line, distances
+
+# convert luminosity distance to redshift
+def dL_to_redshift(distance, z0=0):
+    # auxiliary function to solve using scipy
+    def func(z, distance, H):
+        return distance - dL(z, H)
+
+    # compute the redshift for the provided luminosity distance
+    redshift = fsolve(func, z0, args=(distance, H))[0]
+
+    return redshift
 
 
 # distribute the events around the most likely value using a gaussian distribution, with protection against negative values
