@@ -5,6 +5,7 @@
 # imports
 import pandas
 import sys
+import os
 
 
 # export catalog to file
@@ -17,13 +18,21 @@ def save(redshifts, distances, errors, filename, info=""):
 
     # header
     if info:
-        file.write(info + "\n")
-    file.write("# units: none, Gpc, Gpc\n")
+        print(info + "\n", file=file)
+    print("# units: none, Gpc, Gpc\n", file=file)
 
-    # body
-    file.write("redshift,luminosity_distance,error\n")
-    for i in range(0, len(redshifts)):
-        file.write(f"{redshifts[i]},{distances[i]},{errors[i]}\n")
+    # name of variables
+    print("redshift,luminosity_distance,error", file=file)
+
+    # sort events by ascending order using the 'sort' terminal utility and print them
+    with open("/tmp/gwc-unsorted.csv", "w") as tmpfile:
+        for i in range(0, len(redshifts)):
+            tmpfile.write(f"{redshifts[i]},{distances[i]},{errors[i]}\n")
+    print(os.popen("sort -n /tmp/gwc-unsorted.csv").read(), file=file)
+    os.system("rm /tmp/gwc-unsorted.csv")
+
+    if filename != sys.stdout:
+        file.close()
 
     pass
 
