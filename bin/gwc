@@ -225,7 +225,7 @@ def main(args):
 # run if called
 if __name__ == "__main__":
     # epilog for all parsers
-    epilog = "Documentation, bug reports, suggestions and discussions at:\nhttps://github.com/jpmvferreira/gwcatalog"
+    epilog = "Project homepage:\nhttps://github.com/jpmvferreira/gwcatalog"
 
     # create the top level parser
     parser = argparse.ArgumentParser(epilog=epilog)
@@ -259,7 +259,7 @@ if __name__ == "__main__":
     # generate: LISA
     generate_lisa = generate_subparser.add_parser("LISA", help="Generate a LISA forecast catalog with MBHBs.", epilog=epilog)
     generate_lisa_group = generate_lisa.add_argument_group("Keyword arguments")
-    generate_lisa_group.add_argument("-p", "--population", type=str, help="Specify the MBHB catalog population. Available populations are: No Delay, Delay and Pop III.", required=True)
+    generate_lisa_group.add_argument("-p", "--population", type=str, help="Specify the MBHB catalog population. Available populations are: No Delay (default), Delay and Pop III.", default="No Delay")
     generate_lisa_group.add_argument("-y", "--years", type=float, help="Number of years to generate the catalog.", default=0)
     generate_lisa_group.add_argument("-e", "--events", type=int, help="Number of events to generate the catalog.", default=0)
     generate_lisa_group.add_argument("-r", "--redshifts", type=str, help="A Python list with the redshift of the events to generate the catalog.", default=[])

@@ -79,7 +79,7 @@ def error(z, dL, H):
 
 
 # generate the forecast LISA events
-def generate(population=None, events=0, years=0, redshifts=[], ideal=False):
+def generate(population="No Delay", events=0, years=0, redshifts=[], ideal=False):
     # protection against none or invalid population
     if not population:
         raise Exception("The population of MBHB must be provided, available populations are: 'Pop III', 'Delay' and 'No Delay'")

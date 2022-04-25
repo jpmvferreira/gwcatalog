@@ -139,7 +139,12 @@ The redshift distribution is provided in [[2]](#2), which corresponds to the mis
 
 To generate the LISA mock catalog you must specify two things: A population of massive black hole binaries (MBHB), either "Pop III", "Delay" or "No Delay", and specify either mission lifetime in years or the number of observed events.
 
-For example if you wish to generate the result of a 4 year mission lifetime of population "Pop III" events:
+For example if you wish to generate the result of a 4 year mission lifetime then use:
+```python
+redshifts, distances, errors = gwc.LISA(years=4)
+```
+
+You can optionally specify the population (from "No Delay", "Delay" and "Pop III"):
 ```python
 redshifts, distances, errors = gwc.LISA(population="Pop III", years=4)
 ```
