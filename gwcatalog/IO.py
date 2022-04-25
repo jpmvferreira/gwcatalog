@@ -16,12 +16,12 @@ def save(redshifts, distances, errors, filename, info=""):
     else:
         file = filename
 
-    # header
+    # information header
     if info:
-        print(info + "\n", file=file)
-    print("# units: none, Gpc, Gpc\n", file=file)
+        print(info, file=file)
 
-    # name of variables
+    # variables and respective units
+    print("# units: none, Gpc, Gpc", file=file)
     print("redshift,luminosity_distance,error", file=file)
 
     # sort events by ascending order using the 'sort' terminal utility and print them
