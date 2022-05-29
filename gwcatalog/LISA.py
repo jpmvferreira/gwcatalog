@@ -38,7 +38,7 @@ def dist(population):
     dist = [i/N for i in dist]
 
     # get the minimum and maximum of the redshift distribution
-    dmin = min(dist)
+    dmin = 0
     dmax = max(dist)
 
     # define our redshift distribution function

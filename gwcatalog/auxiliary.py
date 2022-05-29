@@ -13,7 +13,7 @@ import os
 from .cosmology import H, dL
 
 
-# get N randomly generated events from a given distribution, using rejection
+# get N randomly generated events from a given distribution, using rejection methods
 def GetRandom(distribution, x_min, x_max, y_min, y_max, N=1):
     counter = 0
     events = []
