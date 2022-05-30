@@ -3,6 +3,7 @@ from gwcatalog.LISA import generate as LISA
 from gwcatalog.ET import generate as ET
 from gwcatalog.GWTC import generate as GWTC
 from gwcatalog.LIGO import generate as LIGO
+from gwcatalog.SNIa import generate as SNIa
 
 # debug catalogs
 from gwcatalog.LISA import plot_dist as LISA_dist
@@ -11,6 +12,8 @@ from gwcatalog.ET import plot_dist as ET_dist
 from gwcatalog.ET import plot_error as ET_error
 from gwcatalog.LIGO import plot_dist as LIGO_dist
 from gwcatalog.LIGO import plot_error as LIGO_error
+from gwcatalog.SNIa import plot_dist as SNIa_dist
+from gwcatalog.SNIa import plot_example as SNIa_example
 
 # IO functions to save and load catalogs
 from gwcatalog.IO import save, load
