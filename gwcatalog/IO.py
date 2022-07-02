@@ -24,12 +24,13 @@ def save(redshifts, distances, errors, filename, info=""):
     print("# units: none, Gpc, Gpc", file=file)
     print("redshift,luminosity_distance,error", file=file)
 
-    # sort events by ascending order using the 'sort' terminal utility and print them
-    with open("/tmp/gwc-unsorted.csv", "w") as tmpfile:
+    # sort events by ascending order, using the 'sort' terminal utility, in a temp file made by 'mktemp'
+    filename = os.popen("mktemp --suffix=.csv -t gwc-XXXXXXXXXX").read().replace("\n", "")
+    with open(filename, "w") as tmpfile:
         for i in range(0, len(redshifts)):
             tmpfile.write(f"{redshifts[i]},{distances[i]},{errors[i]}\n")
-    print(os.popen("sort -n /tmp/gwc-unsorted.csv").read(), file=file)
-    os.system("rm /tmp/gwc-unsorted.csv")
+    print(os.popen(f"sort -n {filename}").read(), file=file)
+    os.system(f"rm {filename}")
 
     if filename != sys.stdout:
         file.close()
