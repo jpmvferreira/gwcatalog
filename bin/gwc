@@ -231,7 +231,7 @@ def main(args):
         os.system("rm -r /tmp/gwcatalog")
         uncache(["gwcatalog.cosmology"])
     else:
-        description = "ΛCDM (Ωm = 0.315, H0 = 67.4 km s⁻¹ Mpc⁻¹)"
+        description = "ΛCDM (Ωm = 0.284, h = 0.7)"
 
     # import gwcatalog to global namespace after monkey patching the cosmology
     global gwc
