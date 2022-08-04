@@ -217,9 +217,9 @@ def main(args):
     # import custom cosmology, if provided, using monkey patching
     if args.cosmology:
         from gwcatalog import cosmology
-        os.system("mkdir /tmp/gwcatalog")
-        os.system(f"cp {args.cosmology} /tmp/gwcatalog/model.py")
-        sys.path.append(f"/tmp/gwcatalog")
+        tmpfolder = os.popen("mktemp -d -t gwcdXXXXXXXXXX").read().replace("\n", "")
+        os.system(f"cp {args.cosmology} {tmpfolder}/model.py")
+        sys.path.append(tmpfolder)
         module = import_module("model")
         cosmology.H = module.H
         cosmology.dL = module.dL
@@ -228,7 +228,7 @@ def main(args):
         except:
             description = "custom"
         sys.path.pop()
-        os.system("rm -r /tmp/gwcatalog")
+        os.system(f"rm -r {tmpfolder}")
         uncache(["gwcatalog.cosmology"])
     else:
         description = "ΛCDM (Ωm = 0.284, h = 0.7)"
