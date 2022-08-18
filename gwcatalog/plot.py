@@ -41,7 +41,7 @@ def plot(*args, theoretical=None, output=None):
             label = theoretical
         else:
             label = ""
-        plt.plot(line, distances, label=label, color="black", zorder=2.5, alpha=0.75)
+        plt.plot(line, distances, label=label, color="black", zorder=2.5, alpha=0.50, linestyle="dashed")
 
     # format and show
     plt.xlabel("z")
