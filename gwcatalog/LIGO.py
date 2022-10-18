@@ -99,11 +99,17 @@ def generate(events=0, redshifts=[], ideal=False):
 # plot the luminosity distance distribution
 def plot_dist(output=None):
     # get luminosity distances distribution
-    distances, probabilities = dLdist()
+    f, dLmin, dLmax, dmin, dmax = dLdist()
+
+    # make a list of probability vs distance
+    probabilities = []
+    distances = np.linspace(dLmin, dLmax, 1000)
+    for i in distances:
+        probabilities.append(f(i))
 
     # plot and show
     plt.plot(distances, probabilities)
-    plt.title("Replicating figure 2 of arXiv:1901.03321")
+    #plt.title("Replicating figure 2 of arXiv:1901.03321")
     plt.gca().axes.yaxis.set_ticklabels([])  # somehow removes ticks without removing grid
     plt.grid()
     plt.xlabel("luminosity distance (Gpc)")
@@ -120,16 +126,13 @@ def plot_dist(output=None):
 
 # plot the error as a function of redshift  FIX-ME
 def plot_error(output=None):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5, 10))
 
-    # get redshift boundaries
-    f, zmin, zmax, dmin, dmax = dist()
+    # get luminosity distance distribution
+    f, dLmin, dLmax, dmin, dmax = dLdist()
 
-    # draw a line for the redshifts
-    redshifts = np.linspace(zmin, zmax, 1000)
-
-    # get luminosity distances
-    distances = [dL(z, H) for z in redshifts]
+    distances = np.linspace(dLmin, dLmax, 1000)
+    redshifts = [dL_to_redshift(i) for i in distances]
 
     # get total error
     errors = [error(z, dL, H) for z in redshifts]
